@@ -1,0 +1,5 @@
+spring.application.name=audio-ecommerce
+
+spring.datasource.url=jdbc:jdbc:postgresql://seu-host-aqui:5432/postgres
+spring.datasource.username=seu-user
+spring.datasource.password=sua-senha
