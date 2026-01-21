@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "cart_items")
-public class CartItem implements Serializable {
+public class CartItemModel implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 4489582961033047954L;
@@ -20,13 +20,13 @@ public class CartItem implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private ProductModel product;
     private Integer quantity;
     private Double totalPrice;
 
-    protected CartItem() {   }
+    protected CartItemModel() {   }
 
-    public CartItem(Product product, Integer quantity) {
+    public CartItemModel(ProductModel product, Integer quantity) {
         this.product = product;
         this.quantity = quantity;
         this.totalPrice = calculateTotalPrice();
@@ -36,7 +36,7 @@ public class CartItem implements Serializable {
         return id;
     }
 
-    public Product getProduct() {
+    public ProductModel getProduct() {
         return product;
     }
 
@@ -59,7 +59,7 @@ public class CartItem implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        CartItem cartItem = (CartItem) o;
+        CartItemModel cartItem = (CartItemModel) o;
         return Objects.equals(id, cartItem.id);
     }
 

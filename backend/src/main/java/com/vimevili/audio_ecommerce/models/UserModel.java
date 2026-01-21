@@ -24,7 +24,7 @@ public class UserModel implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String picture;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "cart")
-public class Cart implements Serializable {
+public class CartModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1130302548136032857L;
 
@@ -20,7 +20,7 @@ public class Cart implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "cart_id")
-    private Set<CartItem> products;
+    private Set<CartItemModel> products;
 
     @Column(nullable = true)
     private Double totalCartValue;
@@ -29,13 +29,13 @@ public class Cart implements Serializable {
     @JoinColumn(name = "user_id")
     private UserModel user;
 
-    protected Cart() {}
+    protected CartModel() {}
 
-    public Cart(UserModel user) {
+    public CartModel(UserModel user) {
         this.user = user;
     }
 
-    public Cart(Set<CartItem> products, UserModel user) {
+    public CartModel(Set<CartItemModel> products, UserModel user) {
         this.products = products;
         this.user = user;
         this.totalCartValue = calculateTotal();
@@ -45,7 +45,7 @@ public class Cart implements Serializable {
         return id;
     }
 
-    public Set<CartItem> getProducts() {
+    public Set<CartItemModel> getProducts() {
         return products;
     }
 
@@ -57,7 +57,7 @@ public class Cart implements Serializable {
         return user;
     }
 
-    public void addProducts(Set<CartItem> products) {
+    public void addProducts(Set<CartItemModel> products) {
         this.products.addAll(products);
     }
 
@@ -70,14 +70,14 @@ public class Cart implements Serializable {
     }
 
     public Double calculateTotal() {
-        totalCartValue = this.products.stream().map(CartItem::calculateTotalPrice).reduce( 0.0, Double::sum);
+        totalCartValue = this.products.stream().map(CartItemModel::calculateTotalPrice).reduce( 0.0, Double::sum);
         return totalCartValue;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Cart cart = (Cart) o;
+        CartModel cart = (CartModel) o;
         return Objects.equals(id, cart.id);
     }
 
