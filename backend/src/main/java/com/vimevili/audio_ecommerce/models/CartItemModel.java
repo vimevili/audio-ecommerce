@@ -21,11 +21,7 @@ public class CartItemModel implements Serializable {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private ProductModel product;
-
-    @Column(nullable = false)
     private Integer quantity;
-
-    @Column(nullable = false)
     private Double totalPrice;
 
     protected CartItemModel() {   }
