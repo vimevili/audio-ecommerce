@@ -1,6 +1,6 @@
 package com.vimevili.audio_ecommerce.services;
 
-import com.vimevili.audio_ecommerce.dtos.product.ProductInfo;
+import com.vimevili.audio_ecommerce.dtos.product.ProductInfoDTO;
 import com.vimevili.audio_ecommerce.enums.ProductCategory;
 import com.vimevili.audio_ecommerce.exceptions.ResourceNotFoundException;
 import com.vimevili.audio_ecommerce.respositories.ProductRepository;
@@ -18,28 +18,28 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Set<ProductInfo> findAll() {
-        List<ProductInfo> products = productRepository.findAllAsDTO();
+    public Set<ProductInfoDTO> findAll() {
+        List<ProductInfoDTO> products = productRepository.findAllAsDTO();
 
-        return new HashSet<ProductInfo>(products);
+        return new HashSet<ProductInfoDTO>(products);
     }
 
-    public ProductInfo findById(UUID id) {
+    public ProductInfoDTO findById(UUID id) {
         return productRepository.findByIdAsDTO(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum produto encontrado com este ID!"));
     }
 
-    public Set<ProductInfo> findByCategory(String productCategory) {
+    public Set<ProductInfoDTO> findByCategory(String productCategory) {
 
-        List<ProductInfo> products = productRepository.findByCategory(ProductCategory.valueOf(productCategory));
-        return new HashSet<ProductInfo>(products);
+        List<ProductInfoDTO> products = productRepository.findByCategory(ProductCategory.valueOf(productCategory));
+        return new HashSet<ProductInfoDTO>(products);
 
     }
 
-    public Set<ProductInfo> search(String param) {
+    public Set<ProductInfoDTO> search(String param) {
 
-        List<ProductInfo> products = productRepository.searchByName(param);
+        List<ProductInfoDTO> products = productRepository.searchByName(param);
 
-        return new HashSet<ProductInfo>(products);
+        return new HashSet<ProductInfoDTO>(products);
 
     }
 }

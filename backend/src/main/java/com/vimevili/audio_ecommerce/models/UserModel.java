@@ -1,18 +1,20 @@
 package com.vimevili.audio_ecommerce.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vimevili.audio_ecommerce.enums.UserRole;
 import jakarta.persistence.*;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class UserModel implements Serializable {
+public class UserModel implements Serializable, UserDetails {
 
     @Serial
     private static final long serialVersionUID = -5261257122332581559L;
@@ -27,19 +29,62 @@ public class UserModel implements Serializable {
     @Column(nullable = true, columnDefinition = "TEXT")
     private String picture;
 
+    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
+    private String username;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String password;
+
+    @Column(nullable = false,  unique = true, columnDefinition = "TEXT")
+    private String email;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ReviewModel> reviews = new HashSet<>();
 
     protected UserModel() {}
 
-    public UserModel(String name) {
-        this.name = name;
-    }
 
-    public UserModel(String name, String picture) {
+    public UserModel(String name, String username, String password, String email, String role) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        setRole(role);
+    }
+    public UserModel(String name, String picture,String username, String password, String email, String role) {
         this.name = name;
         this.picture = picture;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        setRole(role);
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = UserRole.valueOf(role.toUpperCase());
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public UUID getId() {
@@ -100,5 +145,21 @@ public class UserModel implements Serializable {
                 .orElseThrow(() -> new RuntimeException("Review " + id + " not found!"));
         reviewForUpdate.updateRate(rate);
         reviewForUpdate.updateContent(comment);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == UserRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
     }
 }

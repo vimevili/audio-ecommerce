@@ -9,9 +9,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CartRepository extends JpaRepository<CartModel, UUID> {
-    @Query("SELECT c FROM CartModel c " +
-            "LEFT JOIN FETCH c.products p " +
-            "LEFT JOIN FETCH p.product " +
-            "WHERE c.user.id = :userId")
-    Optional<CartModel> findByUserId(@Param("userId") UUID userId);
+    @Query("SELECT c FROM CartModel c LEFT JOIN FETCH c.products WHERE c.id = :id")
+    Optional<CartModel> findByUserId(@Param("id") UUID id);
+
+    @Query("""
+       SELECT c FROM CartModel c\s
+          LEFT JOIN FETCH c.products items
+          LEFT JOIN FETCH items.product
+          LEFT JOIN FETCH c.user
+          WHERE c.id = :id
+    """)
+    Optional<CartModel> findByIdWithItems(@Param("id") UUID id);
 }
