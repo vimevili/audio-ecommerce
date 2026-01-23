@@ -3,8 +3,8 @@ package com.vimevili.audio_ecommerce.dtos.cart;
 import java.util.Set;
 import java.util.UUID;
 
-public record CartInfo(
+public record CartInfoDTO(
         UUID id,
         Double totalCartValue,
-        Set<CartItemInfo> products
+        Set<CartItemInfoDTO> products
 ){}

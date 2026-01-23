@@ -28,13 +28,13 @@ public class CartService  {
     @Autowired
     private UserRepository userRepository;
 
-    public CartInfo findByUserId(String str_user_id) {
+    public CartInfoDTO findByUserId(String str_user_id) {
         UUID userId = UUID.fromString(str_user_id);
 
         return cartRepository.findByUserId(userId)
                 .map(cart -> {
-                    Set<CartItemInfo> itemsDto = cart.getProducts().stream()
-                            .map(product -> new CartItemInfo(
+                    Set<CartItemInfoDTO> itemsDto = cart.getProducts().stream()
+                            .map(product -> new CartItemInfoDTO(
                                     product.getId(),
                                     product.getProduct().getName(),
                                     product.getQuantity(),
@@ -51,18 +51,18 @@ public class CartService  {
                         cartRepository.save(cart);
                     }
 
-                    return new CartInfo(cart.getId(), realCartTotalValue, itemsDto);
+                    return new CartInfoDTO(cart.getId(), realCartTotalValue, itemsDto);
                 })
-                .orElseThrow(() -> new ResourceNotFoundException("Carrinho não encontrado para o usuário: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("No cart was found for user with ID " + userId));
     }
 
-    public CartInfo createCart(CartRequest user_info) {
+    public CartInfoDTO createCart(CartRequestDTO user_info) {
         UUID userId = UUID.fromString(user_info.user_id());
         UserModel user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found!"));
 
         CartModel cart = cartRepository.save(new CartModel(user));
-        return new CartInfo(
+        return new CartInfoDTO(
                 cart.getId(),
                 cart.getTotalCartValue(),
                 Collections.emptySet()
@@ -71,20 +71,36 @@ public class CartService  {
     }
 
     @Transactional
-    public AddToCartInfo addToCart(AddToCartRequest data) {
+    public ChangeItemInfoDTO addToCart(ChangeItemRequestDTO data) {
         UUID cartId = UUID.fromString(data.cart_id());
 
         ProductModel product = productRepository.findById(UUID.fromString(data.product_id()))
-                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found!"));
 
         return cartRepository.findByIdWithItems(cartId)
                 .map(cart -> {
                     CartItemModel newItem = new CartItemModel(product, data.quantity());
                     cart.addProducts(Set.of(newItem));
                     cartRepository.save(cart);
-                    return new AddToCartInfo("Item adicionado com sucesso");
+                    return new ChangeItemInfoDTO("Item added successfully!");
                 })
-                .orElseThrow(() -> new ResourceNotFoundException("Carrinho não encontrado!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found!"));
+    }
+
+    @Transactional
+    public ChangeItemInfoDTO removeFromCart(ChangeItemRequestDTO data) {
+        UUID cartId = UUID.fromString(data.cart_id());
+        UUID productId = UUID.fromString(data.product_id());
+
+        CartModel cart = cartRepository.findByIdWithItems(cartId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found!"));
+
+        cart.removeProducts(productId);
+        cart.calculateTotal();
+
+        cartRepository.save(cart);
+
+        return new ChangeItemInfoDTO("Item removed successfully!");
     }
 
 }

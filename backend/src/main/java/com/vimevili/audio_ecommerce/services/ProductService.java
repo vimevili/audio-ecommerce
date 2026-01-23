@@ -25,7 +25,7 @@ public class ProductService {
     }
 
     public ProductInfoDTO findById(UUID id) {
-        return productRepository.findByIdAsDTO(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum produto encontrado com este ID!"));
+        return productRepository.findByIdAsDTO(id).orElseThrow(() -> new ResourceNotFoundException("No product was found with this ID!"));
     }
 
     public Set<ProductInfoDTO> findByCategory(String productCategory) {
