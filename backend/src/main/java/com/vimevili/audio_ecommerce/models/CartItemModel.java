@@ -12,7 +12,7 @@ import java.util.UUID;
 public class CartItemModel implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 4489582961033047954L;
+    private static final long serialVersionUID = 2405238575079707240L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,8 +21,14 @@ public class CartItemModel implements Serializable {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private ProductModel product;
+
     private Integer quantity;
+
     private Double totalPrice;
+
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
+    private CartModel cart;
 
     protected CartItemModel() {   }
 
@@ -50,6 +56,14 @@ public class CartItemModel implements Serializable {
 
     public Double getTotalPrice() {
         return totalPrice;
+    }
+
+    public CartModel getCart() {
+        return cart;
+    }
+
+    public void setCart(CartModel cart) {
+        this.cart = cart;
     }
 
     public Double calculateTotalPrice() {

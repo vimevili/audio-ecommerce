@@ -2,6 +2,7 @@ package com.vimevili.audio_ecommerce.services;
 
 import com.vimevili.audio_ecommerce.dtos.product.ProductInfo;
 import com.vimevili.audio_ecommerce.enums.ProductCategory;
+import com.vimevili.audio_ecommerce.exceptions.ResourceNotFoundException;
 import com.vimevili.audio_ecommerce.respositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,13 +25,12 @@ public class ProductService {
     }
 
     public ProductInfo findById(UUID id) {
-        return productRepository.findByIdAsDTO(id);
+        return productRepository.findByIdAsDTO(id).orElseThrow(() -> new ResourceNotFoundException("Nenhum produto encontrado com este ID!"));
     }
 
     public Set<ProductInfo> findByCategory(String productCategory) {
 
         List<ProductInfo> products = productRepository.findByCategory(ProductCategory.valueOf(productCategory));
-
         return new HashSet<ProductInfo>(products);
 
     }

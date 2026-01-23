@@ -57,8 +57,11 @@ public class CartModel implements Serializable {
         return user;
     }
 
-    public void addProducts(Set<CartItemModel> products) {
-        this.products.addAll(products);
+    public CartModel addProducts(Set<CartItemModel> newItems) {
+        newItems.forEach(item -> item.setCart(this));
+        this.products.addAll(newItems);
+        this.calculateTotal();
+        return this;
     }
 
     public void removeProducts(UUID product_id) {

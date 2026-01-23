@@ -1,10 +1,8 @@
 package com.vimevili.audio_ecommerce.controllers;
 
 import com.vimevili.audio_ecommerce.dtos.product.ProductInfo;
-import com.vimevili.audio_ecommerce.enums.ProductCategory;
 import com.vimevili.audio_ecommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
