@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-audio-green: #0acf83;
+  --color-audio-yellow: #ffc120;
+}
+
+@layer components {
+  .input-container {
+    @apply flex items-center gap-2 bg-white p-2 rounded-md;
+  }
+  .page-container {
+    @apply min-h-screen w-full p-10 bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center;
+  }
+}
+
+#root {
+  /* max-width: 1280px; */
+  height: 100vh;
+  margin: 0 auto;
+  font-family: 'DM Sans', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  text-align: center;
+}
