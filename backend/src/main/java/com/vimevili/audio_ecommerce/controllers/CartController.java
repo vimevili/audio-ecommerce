@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/api/cart")
 @Tag(name = "Cart", description = "Endpoints for basic cart operations (create, add, remove, get)")
 public class CartController {
 

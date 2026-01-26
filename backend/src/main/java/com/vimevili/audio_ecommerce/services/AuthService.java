@@ -12,8 +12,9 @@ public class AuthService implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
+    
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        return userRepository.findByUsernameOrEmail(identifier, identifier);
     }
 }

@@ -41,6 +41,9 @@ public class UserModel implements Serializable, UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Column(nullable = false)
+    private boolean enabled; 
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ReviewModel> reviews = new HashSet<>();
@@ -48,21 +51,24 @@ public class UserModel implements Serializable, UserDetails {
     protected UserModel() {}
 
 
-    public UserModel(String name, String username, String password, String email, String role) {
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        setRole(role);
-    }
-    public UserModel(String name, String picture,String username, String password, String email, String role) {
-        this.name = name;
-        this.picture = picture;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        setRole(role);
-    }
+    public UserModel(String name, String username, String password, String email, UserRole role) {
+    this.name = name;
+    this.username = username;
+    this.password = password;
+    this.email = email;
+    this.role = role; 
+    this.enabled = false; 
+}
+
+public UserModel(String name, String picture, String username, String password, String email, UserRole role) {
+    this.name = name;
+    this.picture = picture;
+    this.username = username;
+    this.password = password;
+    this.email = email;
+    this.role = role;
+    this.enabled = false;
+}
 
     public UserRole getRole() {
         return role;
@@ -105,6 +111,15 @@ public class UserModel implements Serializable, UserDetails {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+    
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.enabled; 
     }
 
     @Override
