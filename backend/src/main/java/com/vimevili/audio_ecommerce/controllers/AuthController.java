@@ -1,12 +1,30 @@
 package com.vimevili.audio_ecommerce.controllers;
 
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.vimevili.audio_ecommerce.dtos.tokens.ForgotPasswordDTO;
 import com.vimevili.audio_ecommerce.dtos.tokens.ResetPasswordDTO;
 import com.vimevili.audio_ecommerce.dtos.user.AuthDTO;
-import com.vimevili.audio_ecommerce.dtos.user.LoginResponseDTO;
 import com.vimevili.audio_ecommerce.dtos.user.RegisterDTO;
-import com.vimevili.audio_ecommerce.infra.security.SecurityConfiguration;
 import com.vimevili.audio_ecommerce.infra.security.TokenService;
 import com.vimevili.audio_ecommerce.models.PasswordResetToken;
 import com.vimevili.audio_ecommerce.models.UserModel;
@@ -16,23 +34,14 @@ import com.vimevili.audio_ecommerce.respositories.UserRepository;
 import com.vimevili.audio_ecommerce.respositories.VerificationTokenRepository;
 import com.vimevili.audio_ecommerce.services.AuthService;
 import com.vimevili.audio_ecommerce.services.EmailService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -55,6 +64,12 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Value("${app.security.cookie-secure}")
+    private boolean isCookieSecure;
+
+    @Value("${app.security.same-site}")
+    private String cookieSameSite;
+
     @PostMapping("/login")
     @Operation(summary = "Sign In", description = "Return a JWT token if the credentials are valid")
     @ApiResponses(value = {
@@ -62,13 +77,24 @@ public class AuthController {
         @ApiResponse(responseCode = "401", description = "Either the username or password you are trying to log in with are incorrect!", content = @Content),
         @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })
-    public ResponseEntity login(@RequestBody @Valid AuthDTO data){
+    public ResponseEntity login(@RequestBody @Valid AuthDTO data, HttpServletResponse response){
         try {
             var usernamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
             var auth = this.authenticationManager.authenticate(usernamePassword);
 
             var token = tokenService.generateToken((UserModel) auth.getPrincipal());
-            return ResponseEntity.ok(new LoginResponseDTO(token));
+
+            ResponseCookie cookie = ResponseCookie.from("auth_token", token)
+                .httpOnly(true)          
+                .secure(isCookieSecure) 
+                .path("/")               
+                .maxAge(60 * 60 * 2)    // Expira em 2 horas
+                .sameSite(cookieSameSite)         
+                .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+            
+            return ResponseEntity.ok("Login successful!");
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Either the username or password you are trying to log in with are incorrect");

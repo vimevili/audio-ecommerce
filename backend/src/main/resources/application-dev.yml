@@ -1,0 +1,7 @@
+app:
+  url:
+    frontend: http://localhost:5173
+    backend: http://localhost:8080
+  security:
+    cookie-secure: false
+    same-site: Lax

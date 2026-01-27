@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active: dev
+
+app:
+  security:
+    cookie-name: auth_token

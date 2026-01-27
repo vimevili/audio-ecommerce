@@ -7,6 +7,7 @@ import com.vimevili.audio_ecommerce.respositories.VerificationTokenRepository;
 import com.vimevili.audio_ecommerce.respositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,6 +36,9 @@ public class AuthService implements UserDetailsService {
     public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
         return userRepository.findByUsernameOrEmail(identifier, identifier);
     }
+    
+    @Value("${app.url.frontend}")
+    private String frontendUrl ;
 
     @Transactional
     public void processForgotPassword(String email) {
@@ -48,7 +52,7 @@ public class AuthService implements UserDetailsService {
 
         passwordResetRepository.save(resetToken);
 
-        String resetUrl = "http://localhost:8080/api/auth/reset-password?token=" + token;
+        String resetUrl = frontendUrl + "/reset-password?token=" + token;
         sendEmail(user.getEmail(), resetUrl);
     }
 
