@@ -1,16 +1,21 @@
 package com.vimevili.audio_ecommerce.controllers;
 
 
+import com.vimevili.audio_ecommerce.dtos.tokens.ForgotPasswordDTO;
+import com.vimevili.audio_ecommerce.dtos.tokens.ResetPasswordDTO;
 import com.vimevili.audio_ecommerce.dtos.user.AuthDTO;
 import com.vimevili.audio_ecommerce.dtos.user.LoginResponseDTO;
 import com.vimevili.audio_ecommerce.dtos.user.RegisterDTO;
+import com.vimevili.audio_ecommerce.infra.security.SecurityConfiguration;
 import com.vimevili.audio_ecommerce.infra.security.TokenService;
+import com.vimevili.audio_ecommerce.models.PasswordResetToken;
 import com.vimevili.audio_ecommerce.models.UserModel;
 import com.vimevili.audio_ecommerce.models.VerificationToken;
-import com.vimevili.audio_ecommerce.respositories.TokenRepository;
+import com.vimevili.audio_ecommerce.respositories.PasswordResetTokenRepository;
 import com.vimevili.audio_ecommerce.respositories.UserRepository;
+import com.vimevili.audio_ecommerce.respositories.VerificationTokenRepository;
+import com.vimevili.audio_ecommerce.services.AuthService;
 import com.vimevili.audio_ecommerce.services.EmailService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,12 +29,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -42,9 +45,15 @@ public class AuthController {
     @Autowired
     private TokenService tokenService;
     @Autowired
-    private TokenRepository tokenrRepository;
+    private VerificationTokenRepository tokenRepository;
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private AuthService authService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     @Operation(summary = "Sign In", description = "Return a JWT token if the credentials are valid")
@@ -84,7 +93,7 @@ public class AuthController {
     this.userRepository.save(newUser);
     
     VerificationToken vToken = new VerificationToken( newUser);
-    this.tokenrRepository.save(vToken);
+    this.tokenRepository.save(vToken);
 
     emailService.sendVerificationEmail(newUser, vToken.getToken());
 
@@ -99,14 +108,14 @@ public class AuthController {
         @ApiResponse(responseCode = "404", description = "Token not found", content = @Content)
     })
     public ResponseEntity<String> confirmAccount(@RequestParam("token") String token) {
-        VerificationToken verificationToken = tokenrRepository.findByToken(token);
+        VerificationToken verificationToken = tokenRepository.findByToken(token);
 
         if (verificationToken == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token não encontrado ou inválido.");
         }
 
         if (verificationToken.getExpiryDate().isBefore(java.time.LocalDateTime.now())) {
-            tokenrRepository.delete(verificationToken);
+            tokenRepository.delete(verificationToken);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Este link de confirmação expirou. Por favor, registre-se novamente.");
         }
 
@@ -114,8 +123,49 @@ public class AuthController {
         user.setEnabled(true);
         userRepository.save(user);
 
-        tokenrRepository.delete(verificationToken);
+        tokenRepository.delete(verificationToken);
 
         return ResponseEntity.ok("Conta ativada com sucesso! Você já pode fazer login no Audio E-commerce.");
+    }
+
+    @PostMapping("/forgot-password")
+    @Operation(summary = "Request Password Reset", description = "Sends a recovery link to the user's email if it exists in the database")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "If the email exists, a reset link has been sent.", content = @Content)
+    })
+    public ResponseEntity<String> forgotPassword(@RequestBody @Valid ForgotPasswordDTO request) {
+        authService.processForgotPassword(request.email());
+
+        return ResponseEntity.ok("Se o e-mail informado estiver cadastrado, você receberá um link de recuperação em instantes.");
+    }
+
+    @PostMapping("/reset-password")
+    @Operation(summary = "Reset Password", description = "Updates the user's password using a valid reset token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Password successfully updated!", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid or expired token", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Token not found", content = @Content)
+    })
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordDTO request) {
+        Optional<PasswordResetToken> resetTokenOpt = passwordResetTokenRepository.findByToken(request.token());
+
+        if (resetTokenOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token de recuperação não encontrado.");
+        }
+
+        PasswordResetToken resetToken = resetTokenOpt.get();
+
+        if (resetToken.getExpiryDate().isBefore(java.time.LocalDateTime.now())) {
+            passwordResetTokenRepository.delete(resetToken);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Este link de recuperação expirou. Solicite um novo.");
+        }
+
+        UserModel user = resetToken.getUser();
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+
+        passwordResetTokenRepository.delete(resetToken);
+
+        return ResponseEntity.ok("Senha alterada com sucesso! Você já pode fazer login com suas novas credenciais.");
     }
 }
