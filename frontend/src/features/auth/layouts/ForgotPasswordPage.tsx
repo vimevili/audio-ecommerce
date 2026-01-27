@@ -2,11 +2,7 @@ import { bgForgot, logoSvg } from '@/assets';
 import { Button, TextInput } from '@/components';
 import { Link } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
-import {
-  HiArrowLeft,
-  HiOutlineMail,
-  HiOutlineQuestionMarkCircle,
-} from 'react-icons/hi';
+import { ArrowLeft, Mail, FileQuestionMark } from 'lucide-react';
 
 const gradientBg = 'bg-linear-to-tr from-green-200 to-purple-200';
 const styledQuestionIcon = 'text-audio-green text-8xl mb-4';
@@ -30,12 +26,12 @@ const MobileLayout = () => {
         to="/sign-in"
         className="absolute top-8 left-8 text-gray-600 text-lg"
       >
-        <HiArrowLeft />
+        <ArrowLeft />
       </Link>
 
       <div className="flex-1 flex flex-col justify-center items-center">
         <header className="text-center mb-12 flex flex-col items-center">
-          <HiOutlineQuestionMarkCircle className={styledQuestionIcon} />
+          <FileQuestionMark className={styledQuestionIcon} />
           <h1 className="audio-title text-xl! text-audio-green!">
             Forgot your password?
           </h1>
@@ -44,11 +40,12 @@ const MobileLayout = () => {
 
         <form className="w-full max-w-sm flex flex-col gap-4">
           <TextInput
+            error={undefined}
             name="email"
             placeholder="Email"
             register={register}
             required
-            Icon={HiOutlineMail}
+            Icon={Mail}
           />
           <Button text="Send Email" styles="font-bold justify-center!" />
         </form>
@@ -69,12 +66,12 @@ function DesktopLayout() {
           to="/sign-in"
           className="absolute top-12 left-12 text-white text-3xl hover:scale-110 transition-transform"
         >
-          <HiArrowLeft />
+          <ArrowLeft />
         </Link>
 
         <div className="flex-1 flex flex-col justify-center items-center">
           <header className="text-center mb-12 flex flex-col items-center">
-            <HiOutlineQuestionMarkCircle className={styledQuestionIcon} />
+            <FileQuestionMark className={styledQuestionIcon} />
             <h1 className="audio-title text-4xl! text-audio-green!">
               Forgot your password?
             </h1>
@@ -86,7 +83,8 @@ function DesktopLayout() {
               name="email"
               placeholder="Email"
               register={register}
-              Icon={HiOutlineMail}
+              Icon={Mail}
+              error={undefined}
             />
             <Button
               text="Send Email"

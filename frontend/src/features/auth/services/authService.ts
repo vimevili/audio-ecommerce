@@ -15,4 +15,8 @@ export const authService = {
   forgotPassword: async (email: string) => {
     await api.post('/auth/forgot-password', { email });
   },
+
+  resetPassword: async (email: string) => {
+    await api.post('/auth/reset-password', { email });
+  },
 };

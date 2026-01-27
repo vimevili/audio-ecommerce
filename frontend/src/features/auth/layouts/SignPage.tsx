@@ -1,11 +1,18 @@
 import { authBackground, bgSignIn, bgSignUp, logoSvg } from '@/assets';
-import AuthForm from '../components/AuthForm';
+import SignInForm from '../components/SignInForm';
+import SignUpForm from '../components/SignUpForm';
 
-interface SignProps {
+interface IProps {
   type: 'sign-in' | 'sign-up';
 }
+const renderForm = (type: 'sign-in' | 'sign-up', showTitle: boolean) => {
+  if (type === 'sign-in') {
+    return <SignInForm showTitle={showTitle} />;
+  }
+  return <SignUpForm showTitle={showTitle} />;
+};
 
-const MobileLayout = ({ type }: SignProps) => {
+const MobileLayout = ({ type }: IProps) => {
   return (
     <main
       className="auth-page-container"
@@ -16,14 +23,10 @@ const MobileLayout = ({ type }: SignProps) => {
         <h3 className="audio-subtitle">It's modular and designed to last</h3>
       </header>
 
-      <AuthForm type={type} showTitle={false} />
+      {renderForm(type, false)}
     </main>
   );
 };
-
-interface IProps {
-  type: 'sign-in' | 'sign-up';
-}
 
 function DesktopLayout({ type }: IProps) {
   const isSignIn = type === 'sign-in';
@@ -62,8 +65,7 @@ function DesktopLayout({ type }: IProps) {
                 It's modular and designed to last
               </p>
             </header>
-
-            <AuthForm type={type} showTitle={true} />
+            {renderForm(type, true)}
 
             <p className="mt-6 text-xs text-gray-700">
               © 2026 Audio App. Alguns direitos reservados.
@@ -82,7 +84,7 @@ function DesktopLayout({ type }: IProps) {
   );
 }
 
-function SignPage({ type }: SignProps) {
+function SignPage({ type }: IProps) {
   return (
     <>
       <div className="block md:hidden">
