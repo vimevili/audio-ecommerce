@@ -29,19 +29,21 @@ function TextInput<T extends FieldValues>({
   const inputType = type === 'password' && showPassword ? 'text' : type;
 
   return (
-    <div className="input-container bg-white">
-      <Icon className="text-gray-400" size={20} />
+    <div className="input-container bg-white text-gray-400 transition-all border border-transparent focus-within:border-audio-green focus-within:text-audio-green">
+      <Icon className="transition-colors shrink-0" size={20} />
+
       <input
         placeholder={placeholder}
         type={inputType}
         {...register(name, { required })}
-        className="bg-transparent w-full text-gray-400 focus:outline-none"
+        className="text-lg outline-none w-full bg-transparent text-gray-400 focus:text-audio-green transition-colors placeholder:text-gray-400"
       />
+
       {type === 'password' && (
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="text-gray-500 hover:text-audio-green transition-colors"
+          className="flex items-center justify-center text-gray-400 hover:text-audio-green transition-colors"
         >
           {showPassword ? (
             <MdOutlineVisibilityOff size={20} />
@@ -49,7 +51,7 @@ function TextInput<T extends FieldValues>({
             <MdOutlineVisibility size={20} />
           )}
         </button>
-      )}{' '}
+      )}
     </div>
   );
 }

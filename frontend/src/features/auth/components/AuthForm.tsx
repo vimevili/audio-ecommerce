@@ -6,9 +6,10 @@ import { authService } from '../services/authService';
 
 interface IProps {
   type: 'sign-in' | 'sign-up';
+  showTitle?: boolean;
 }
 
-function AuthForm({ type }: IProps) {
+function AuthForm({ type, showTitle }: IProps) {
   const { register } = useForm();
   const config = {
     'sign-in': {
@@ -29,6 +30,11 @@ function AuthForm({ type }: IProps) {
 
   return (
     <form className="w-full flex flex-col gap-4">
+      {showTitle && (
+        <h2 className="audio-title text-5xl! text-black! text-left!">
+          {type === 'sign-in' ? 'Sign In' : 'Sign Up'}
+        </h2>
+      )}
       <TextInput
         name="email"
         placeholder="Email"
@@ -44,7 +50,10 @@ function AuthForm({ type }: IProps) {
       />
       <div className="flex flex-col gap-4">
         {type === 'sign-in' && (
-          <Link to="/forgot-my-password" className="text-sm text-white">
+          <Link
+            to="/forgot-my-password"
+            className={`audio-subtitle ${showTitle && 'text-black!'}`}
+          >
             Forgot My Password
           </Link>
         )}
@@ -54,7 +63,7 @@ function AuthForm({ type }: IProps) {
           styles="font-bold w-full bg-audio-green"
         />
 
-        <p className="text-white text-sm">
+        <p className={`audio-subtitle ${showTitle && 'text-black!'}`}>
           {config.linkText}
           <Link
             to={config.linkTo}

@@ -7,9 +7,12 @@ import { defineConfig } from 'vite';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss(), tanstackRouter()],
+  server: {
+    host: true,
+    port: 5173,
+  },
   resolve: {
     alias: {
-      // Isso mapeia o '@' para a pasta 'src'
       '@': path.resolve(__dirname, './src'),
     },
   },

@@ -7,18 +7,16 @@ interface IProps {
   type?: 'button' | 'reset' | 'submit';
 }
 
-function TextInput({ text, styles, Icon, type }: IProps) {
+function Button({ text, styles, Icon, type }: IProps) {
   return (
-    <div className="input-container bg-audio-green">
-      <button
-        type={type ?? 'button'}
-        className={`bg-transparent text-white focus:outline-none text-st ${styles}`}
-      >
-        {text}
-      </button>
+    <button
+      type={type ?? 'button'}
+      className={`input-container bg-audio-green text-white focus:outline-none text-st ${styles}`}
+    >
+      {text}
       {Icon && <Icon className="text-white" size={20} />}
-    </div>
+    </button>
   );
 }
 
-export default TextInput;
+export default Button;
