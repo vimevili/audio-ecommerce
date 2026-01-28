@@ -13,7 +13,7 @@ public class WelcomeLogger {
         String swagger = url + "/swagger-ui/index.html";
 
         System.out.println("=".repeat(50));
-        System.out.println("🎵 AUDIO E-COMMERCE - BACKEND READY");
+        System.out.println("🎵 AUDIO APP - BACKEND READY");
         System.out.println("🚀 API Base: " + "\u001B[32m" +  url);
         System.out.println("📖 Swagger:  " + "\u001B[32m" + swagger);
         System.out.println("=".repeat(50) + "\u001B[0m\n");

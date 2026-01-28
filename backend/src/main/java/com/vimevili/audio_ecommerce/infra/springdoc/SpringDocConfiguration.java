@@ -21,7 +21,7 @@ public class SpringDocConfiguration {
                                         .scheme("bearer")
                                         .bearerFormat("JWT")))
                 .info(new Info()
-                        .title("Audio e-commerce API")
+                        .title("Audio App API")
                         .description("Audio API Rest")
                         .contact(new Contact()
                                 .name("Vinicius Meirelles Coelho")
