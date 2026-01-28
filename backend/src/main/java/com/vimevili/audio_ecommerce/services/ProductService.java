@@ -20,7 +20,6 @@ public class ProductService {
 
     public Set<ProductInfoDTO> findAll() {
         List<ProductInfoDTO> products = productRepository.findAllAsDTO();
-
         return new HashSet<ProductInfoDTO>(products);
     }
 
@@ -28,17 +27,13 @@ public class ProductService {
         return productRepository.findByIdAsDTO(id).orElseThrow(() -> new ResourceNotFoundException("No product was found with this ID!"));
     }
 
-    public Set<ProductInfoDTO> findByCategory(String productCategory) {
-
-        List<ProductInfoDTO> products = productRepository.findByCategory(ProductCategory.valueOf(productCategory));
+    public Set<ProductInfoDTO> findByCategory(ProductCategory productCategory) {
+        List<ProductInfoDTO> products = productRepository.findByCategory(productCategory);
         return new HashSet<ProductInfoDTO>(products);
-
     }
 
     public Set<ProductInfoDTO> search(String param) {
-
         List<ProductInfoDTO> products = productRepository.searchByName(param);
-
         return new HashSet<ProductInfoDTO>(products);
 
     }

@@ -1,62 +1,73 @@
 package com.vimevili.audio_ecommerce.controllers;
 
-import com.vimevili.audio_ecommerce.dtos.cart.ChangeItemInfoDTO;
-import com.vimevili.audio_ecommerce.dtos.cart.ChangeItemRequestDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.vimevili.audio_ecommerce.dtos.cart.CartInfoDTO;
 import com.vimevili.audio_ecommerce.dtos.cart.CartRequestDTO;
+import com.vimevili.audio_ecommerce.dtos.cart.ChangeItemInfoDTO;
+import com.vimevili.audio_ecommerce.dtos.cart.ChangeItemRequestDTO;
+import com.vimevili.audio_ecommerce.infra.docs.ApiAuthErrors;
+import com.vimevili.audio_ecommerce.infra.docs.ApiGlobalErrors;
+import com.vimevili.audio_ecommerce.infra.docs.ApiNotFoundResponse;
 import com.vimevili.audio_ecommerce.services.CartService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/cart")
-@Tag(name = "Cart", description = "Endpoints for basic cart operations (create, add, remove, get)")
+@Tag(name = "Cart", description = "Endpoints for shopping cart management")
+@ApiAuthErrors   
+@ApiGlobalErrors 
 public class CartController {
 
     @Autowired
     private CartService cartService;
 
     @PostMapping("/create")
-    @Operation(summary = "Create a new empty cart", security = @SecurityRequirement(name = "bearer-key"))
-    @ApiResponse(responseCode = "201", description = "Cart successfully created!", content = @Content)
-    @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
+    @Operation(summary = "Create a new empty cart")
+    @ApiResponse(responseCode = "201", description = "Cart successfully created!", 
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartInfoDTO.class)))
     public ResponseEntity<CartInfoDTO> postCart(@RequestBody CartRequestDTO cartData) {
-        CartInfoDTO cartInfoDTO = cartService.createCart(cartData);
-        return ResponseEntity.ok(cartInfoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.createCart(cartData));
     }
 
     @GetMapping("/user/{userId}")
-    @Operation(summary = "Return an user's cart", security = @SecurityRequirement(name = "bearer-key"))
-    @ApiResponse(responseCode = "200")
-    @ApiResponse(responseCode = "400", description = "User doesn't have permission to access this cart!", content = @Content)
-    @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
+    @Operation(summary = "Return a specific user's cart")
+    @ApiNotFoundResponse 
+    @ApiResponse(responseCode = "200", description = "Cart found", 
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartInfoDTO.class)))
     public ResponseEntity<CartInfoDTO> getCartByUser(@PathVariable String userId) {
-        CartInfoDTO cart = cartService.findByUserId(userId);
-        return ResponseEntity.ok(cart);
+        return ResponseEntity.ok(cartService.findByUserId(userId));
     }
 
     @PostMapping("/add")
-    @Operation(summary = "Add a product to a cart", security = @SecurityRequirement(name = "bearer-key"))
-    @ApiResponse(responseCode = "201", description = "Item successfully added!", content = @Content)
-    @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
+    @Operation(summary = "Add a product to the cart")
+    @ApiNotFoundResponse
+    @ApiResponse(responseCode = "200", description = "Item added successfully", 
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ChangeItemInfoDTO.class)))
     public ResponseEntity<ChangeItemInfoDTO> addToCart(@RequestBody ChangeItemRequestDTO cartData) {
-        ChangeItemInfoDTO cartInfo = cartService.addToCart(cartData);
-        return ResponseEntity.ok(cartInfo);
+        return ResponseEntity.ok(cartService.addToCart(cartData));
     }
 
     @DeleteMapping("/delete")
-    @ApiResponse(responseCode = "201", description = "Item successfully removed!", content = @Content)
-    @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
-    @Operation(summary = "Delete a product from a cart", security = @SecurityRequirement(name = "bearer-key"))
+    @Operation(summary = "Remove a product from the cart")
+    @ApiNotFoundResponse
+    @ApiResponse(responseCode = "200", description = "Item removed successfully", 
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ChangeItemInfoDTO.class)))
     public ResponseEntity<ChangeItemInfoDTO> deleteFromCart(@RequestBody ChangeItemRequestDTO cartData) {
-        ChangeItemInfoDTO cartInfo = cartService.addToCart(cartData);
-        return ResponseEntity.ok(cartInfo);
+        return ResponseEntity.ok(cartService.removeFromCart(cartData));
     }
-
 }
