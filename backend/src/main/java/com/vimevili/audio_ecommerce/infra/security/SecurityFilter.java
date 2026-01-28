@@ -36,13 +36,13 @@ public class SecurityFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String recoverToken(HttpServletRequest request){
-        if (request.getCookies() == null) return null;
+    private String recoverToken(HttpServletRequest request) {
+    if (request.getCookies() == null) return null;
 
-        return Arrays.stream(request.getCookies())
-                .filter(cookie -> "auth_token".equals(cookie.getName()))
-                .map(Cookie::getValue)
-                .findFirst()
-                .orElse(null);
-    }
+    return Arrays.stream(request.getCookies())
+            .filter(cookie -> "auth_token".equals(cookie.getName()))
+            .findFirst()
+            .map(Cookie::getValue)
+            .orElse(null);
+}
 }
