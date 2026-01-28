@@ -13,7 +13,7 @@ function Button({ text, styles, Icon, type }: IProps) {
   return (
     <button
       type={type ?? 'button'}
-      className={`input-container bg-audio-green text-white focus:outline-none ${styles}`}
+      className={`input-container cursor-pointer bg-audio-green text-white focus:outline-none ${styles}`}
     >
       {text}
       {Icon && <Icon className="text-white" size={20} />}

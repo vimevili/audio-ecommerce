@@ -27,16 +27,22 @@ function TextInput<T extends FieldValues>({
   rightElement,
   error,
 }: IProps<T>) {
+  const borderClass = error
+    ? 'border-red-500 text-red-500'
+    : 'border-transparent focus-within:border-audio-green focus-within:text-audio-green';
+
   return (
     <div className="flex flex-col gap-1 justify-end">
-      <div className="input-container bg-white text-gray-400 transition-all border border-transparent focus-within:border-audio-green focus-within:text-audio-green">
+      <div
+        className={`input-container bg-white text-gray-400 transition-all border ${borderClass}`}
+      >
         {Icon && <Icon className="transition-colors shrink-0" size={20} />}
 
         <input
           placeholder={placeholder}
           type={type || 'text'}
           {...register(name, { required })}
-          className="text-lg outline-none w-full bg-transparent text-gray-400 focus:text-audio-green transition-colors placeholder:text-gray-400"
+          className={`text-lg outline-none w-full bg-transparent text-gray-400 ${error ? 'focus:text-red-500' : 'focus:text-audio-green'} transition-colors placeholder:text-gray-400 `}
         />
 
         {rightElement && (

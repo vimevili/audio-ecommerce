@@ -1,6 +1,7 @@
 import { Check, Eye, EyeOff, Lock } from 'lucide-react';
 import { useState } from 'react';
 import type {
+  FieldError,
   FieldValues,
   Path,
   PathValue,
@@ -13,6 +14,7 @@ interface IProps<T extends FieldValues> {
   register: UseFormRegister<T>;
   watch: UseFormWatch<T>;
   page: 'sign-in' | 'sign-up';
+  error: FieldError | undefined;
 }
 
 const requirements = [
@@ -26,6 +28,7 @@ export default function PasswordInput<T extends FieldValues>({
   register,
   watch,
   page,
+  error,
 }: IProps<T>) {
   const [showPassword, setShowPassword] = useState(false);
   const inputType = showPassword ? 'text' : 'password';
@@ -49,7 +52,7 @@ export default function PasswordInput<T extends FieldValues>({
         name={'password' as Path<T>}
         type={inputType}
         register={register}
-        error={undefined}
+        error={error}
         Icon={Lock}
         placeholder="Password"
         rightElement={toggleIcon}
