@@ -62,7 +62,12 @@ function SignUpForm({ showTitle }: IProps) {
         error={errors.email}
         Icon={Mail}
       />
-      <PasswordInput register={register} watch={watch} page="sign-up" />
+      <PasswordInput
+        register={register}
+        watch={watch}
+        page="sign-up"
+        error={errors.password}
+      />
       <div className="flex flex-col gap-4">
         <Button
           text="Sign Up"
