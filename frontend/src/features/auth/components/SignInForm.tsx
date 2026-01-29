@@ -1,12 +1,13 @@
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { Link, useNavigate, useSearch } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { Mail } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import * as z from 'zod';
 import { Button, PasswordInput, TextInput } from '../../../components';
-import type { LoginRequest } from '../models';
+import type { ILoginRequest } from '../models';
 import { authService } from '../services/authService';
 
 interface IProps {
@@ -27,25 +28,65 @@ function SignInForm({ showTitle }: IProps) {
   } = useForm({ resolver: zodResolver(schema) });
 
   const navigate = useNavigate();
-  const search = useSearch({ strict: false });
 
   const { checkAuth } = useAuth();
 
-  const loginMutation = useMutation({
-    mutationFn: (data: LoginRequest) => authService.login(data),
+  const resendEmailMutation = useMutation({
+    mutationFn: (email: string) => authService.resendConfirmationEmail(email),
     onSuccess: async () => {
-      await checkAuth();
-      navigate({ to: search.redirect || '/' });
+      toast.success('Confirmation e-mail sent!', {
+        description: 'Please check your inbox.',
+        duration: Infinity,
+        closeButton: true,
+      });
     },
-    onError: () => {
-      const errorMessage = 'Incorrect e-mail or password!';
-
-      setError('login', { type: 'manual', message: errorMessage });
-      setError('password', { type: 'manual', message: errorMessage });
+    onError: (error) => {
+      toast.error('Error', {
+        description: error.message,
+        duration: Infinity,
+        closeButton: true,
+      });
     },
   });
 
-  async function onSubmit(data: LoginRequest) {
+  const loginMutation = useMutation({
+    mutationFn: (data: ILoginRequest) => authService.login(data),
+    onSuccess: async () => {
+      await checkAuth();
+
+      setTimeout(() => {
+        navigate({ to: '/sign-in' });
+      }, 3000);
+    },
+    onError: (error: Error, variables) => {
+      const isInactive = error.message.includes('not activated');
+
+      if (isInactive) {
+        toast.warning('Account Is Not Activated', {
+          description: 'You need to confirm your e-mail to log in.',
+          duration: Infinity,
+          closeButton: true,
+          style: {
+            flexDirection: 'column',
+            justifyContent: 'center',
+          },
+          action: {
+            label: 'Resend E-mail',
+            onClick: () => resendEmailMutation.mutate(variables.login),
+          },
+          classNames: {
+            actionButton: 'bg-[#0acf83] ml-0',
+          },
+        });
+      } else {
+        toast.error('Error', { description: error.message });
+        setError('login', { type: 'manual' });
+        setError('password', { type: 'manual' });
+      }
+    },
+  });
+
+  async function onSubmit(data: ILoginRequest) {
     loginMutation.mutate(data);
   }
 
