@@ -12,11 +12,11 @@ public class UserService {
     private UserRepository userRepository;
 
     public boolean isUsernameTaken(String username) {
-        return userRepository.existsByUsername(username);
+        return !userRepository.existsByUsername(username);
     }
 
     public boolean isEmailTaken(String email) {
-        return userRepository.existsByEmail(email);
+        return !userRepository.existsByEmail(email);
     }
 }
 

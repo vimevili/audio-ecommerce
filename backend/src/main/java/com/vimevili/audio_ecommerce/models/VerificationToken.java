@@ -29,6 +29,7 @@ public class VerificationToken implements Serializable {
     @JoinColumn(nullable = false, name = "user_id")
     private UserModel user;
 
+    private LocalDateTime createdAt;
     private LocalDateTime expiryDate;
 
     public VerificationToken() {}
@@ -36,6 +37,7 @@ public class VerificationToken implements Serializable {
     public VerificationToken(UserModel user) {
         this.user = user;
         this.token = UUID.randomUUID().toString(); 
+        this.createdAt = LocalDateTime.now(); 
         this.expiryDate = LocalDateTime.now().plusMinutes(15); 
     }
 
@@ -66,6 +68,10 @@ public class VerificationToken implements Serializable {
     public void setExpiryDate(LocalDateTime expiryDate) {
         this.expiryDate = expiryDate;
     }
-    
+
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
     
 }

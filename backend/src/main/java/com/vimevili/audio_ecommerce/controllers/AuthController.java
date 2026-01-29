@@ -1,5 +1,7 @@
 package com.vimevili.audio_ecommerce.controllers;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -122,4 +124,12 @@ public class AuthController {
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/resend-confirmation")
+    @Operation(summary = "Resend Confirmation Email")
+    @ApiResponse(responseCode = "201", description = "Confirmation e-mail successfully sent!")
+    public ResponseEntity<Void> resendConfirmation(@RequestBody Map<String, String> payload) {
+        authService.resendConfirmationEmail(payload.get("email")); 
+        return ResponseEntity.ok().build();
+}
 }

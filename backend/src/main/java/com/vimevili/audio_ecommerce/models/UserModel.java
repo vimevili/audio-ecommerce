@@ -129,13 +129,13 @@ public UserModel(String name, String picture, String username, String password, 
         this.picture = picture;
     }
     
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
     @Override
     public boolean isEnabled() {
         return this.enabled; 
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
