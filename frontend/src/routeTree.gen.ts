@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ForgotMyPasswordRouteImport } from './routes/forgot-my-password'
 import { Route as _protectedRouteImport } from './routes/__protected'
 import { Route as _protectedIndexRouteImport } from './routes/__protected/index'
@@ -23,6 +24,11 @@ const SignUpRoute = SignUpRouteImport.update({
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ForgotMyPasswordRoute = ForgotMyPasswordRouteImport.update({
@@ -43,11 +49,13 @@ const _protectedIndexRoute = _protectedIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof _protectedIndexRoute
   '/forgot-my-password': typeof ForgotMyPasswordRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
 }
 export interface FileRoutesByTo {
   '/forgot-my-password': typeof ForgotMyPasswordRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/': typeof _protectedIndexRoute
@@ -56,19 +64,26 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/__protected': typeof _protectedRouteWithChildren
   '/forgot-my-password': typeof ForgotMyPasswordRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/__protected/': typeof _protectedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/forgot-my-password' | '/sign-in' | '/sign-up'
+  fullPaths:
+    | '/'
+    | '/forgot-my-password'
+    | '/reset-password'
+    | '/sign-in'
+    | '/sign-up'
   fileRoutesByTo: FileRoutesByTo
-  to: '/forgot-my-password' | '/sign-in' | '/sign-up' | '/'
+  to: '/forgot-my-password' | '/reset-password' | '/sign-in' | '/sign-up' | '/'
   id:
     | '__root__'
     | '/__protected'
     | '/forgot-my-password'
+    | '/reset-password'
     | '/sign-in'
     | '/sign-up'
     | '/__protected/'
@@ -77,6 +92,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   _protectedRoute: typeof _protectedRouteWithChildren
   ForgotMyPasswordRoute: typeof ForgotMyPasswordRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
 }
@@ -95,6 +111,13 @@ declare module '@tanstack/react-router' {
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/forgot-my-password': {
@@ -136,6 +159,7 @@ const _protectedRouteWithChildren = _protectedRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   _protectedRoute: _protectedRouteWithChildren,
   ForgotMyPasswordRoute: ForgotMyPasswordRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
 }

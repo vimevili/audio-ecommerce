@@ -2,7 +2,8 @@ import { bgForgot, logoSvg } from '@/assets';
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft, CircleQuestionMark } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { ForgotPasswordForm } from '../components';
+import { ResetPasswordForm } from '../components';
+import { Route } from '@/routes/reset-password';
 
 const gradientBg = 'bg-linear-to-tr from-green-200 to-purple-200';
 
@@ -33,15 +34,9 @@ function MobileLayout({ children }: IProps) {
 
       <div className="flex-1 flex flex-col justify-center items-center gap-4 md:gap-7">
         <header className="text-center flex flex-col items-center">
-          <CircleQuestionMark
-            className="text-audio-green"
-            size={50}
-            strokeWidth={1}
-          />
-          <h1 className="audio-title text-xl! text-audio-green!">
-            Forgot your password?
+          <h1 className="audio-title text-2xl! text-audio-green!">
+            Reset your password
           </h1>
-          <p className="text-gray-600 font-light">We can help you out</p>
         </header>
 
         {children}
@@ -89,14 +84,15 @@ function DesktopLayout({ children }: IProps) {
     </main>
   );
 }
-export default function ForgotPasswordPage() {
+export default function ResetPasswordPage() {
+  const { token } = Route.useSearch();
   return (
     <>
       <div className="md:hidden">
-        <MobileLayout children={<ForgotPasswordForm />} />
+        <MobileLayout children={<ResetPasswordForm token={token} />} />
       </div>
       <div className="hidden md:block">
-        <DesktopLayout children={<ForgotPasswordForm />} />
+        <DesktopLayout children={<ResetPasswordForm token={token} />} />
       </div>
     </>
   );
