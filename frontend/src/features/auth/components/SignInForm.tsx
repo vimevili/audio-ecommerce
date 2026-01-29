@@ -14,11 +14,12 @@ interface IProps {
   showTitle?: boolean;
 }
 
+const schema = z.object({
+  login: z.email('Please, insert a valid email address.'),
+  password: z.string().min(1, 'Password is required'),
+});
+
 function SignInForm({ showTitle }: IProps) {
-  const schema = z.object({
-    login: z.email('Please, insert a valid email address.'),
-    password: z.string().min(1, 'Password is required'),
-  });
   const {
     register,
     handleSubmit,
@@ -106,17 +107,20 @@ function SignInForm({ showTitle }: IProps) {
         placeholder="Email"
         register={register}
         Icon={Mail}
+        disabled={loginMutation.isPending}
       />
       <PasswordInput
         register={register}
         watch={watch}
         page="sign-in"
         error={errors.password}
+        disabled={loginMutation.isPending}
       />
       <div className="flex flex-col gap-4">
         <Link
           to="/forgot-my-password"
           className={`audio-subtitle ${showTitle && 'text-black!'}`}
+          disabled={loginMutation.isPending}
         >
           Forgot My Password
         </Link>
@@ -125,6 +129,7 @@ function SignInForm({ showTitle }: IProps) {
           text="Sign In"
           styles="justify-center font-bold text-xl"
           type="submit"
+          disabled={loginMutation.isPending}
         />
 
         <p className={`audio-subtitle ${showTitle && 'text-black!'}`}>
@@ -132,6 +137,7 @@ function SignInForm({ showTitle }: IProps) {
           <Link
             to="/sign-up"
             className="text-audio-green underline underline-offset-1 ml-1"
+            disabled={loginMutation.isPending}
           >
             Sign Up here
           </Link>

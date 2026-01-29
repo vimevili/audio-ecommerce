@@ -9,12 +9,12 @@ import z from 'zod';
 import type { IForgotPasswordRequest } from '../models';
 import { authService } from '../services/authService';
 
+const schema = z.object({
+  email: z.email({ message: 'Please, insert a valid email address.' }),
+});
+
 export default function ForgotPasswordForm() {
   const [isEmailSent, setIsEmailSent] = useState(false);
-
-  const schema = z.object({
-    email: z.email({ message: 'Please, insert a valid email address.' }),
-  });
 
   type FormSchema = z.infer<typeof schema>;
 
@@ -30,7 +30,6 @@ export default function ForgotPasswordForm() {
     mutationFn: (data: IForgotPasswordRequest) =>
       authService.forgotPassword(data),
     onSuccess: () => setIsEmailSent(true),
-
     onError: (error: Error) => {
       toast.error('Error', { description: error.message });
     },
@@ -61,17 +60,19 @@ export default function ForgotPasswordForm() {
     >
       <TextInput
         name={'email' as Path<FormSchema>}
-        placeholder="Digite seu e-mail"
+        placeholder="E-mail"
         register={register}
         required
         Icon={Mail}
         error={errors.email}
+        disabled={forgotMutation.isPending}
       />
 
       <Button
-        text={forgotMutation.isPending ? 'Enviando...' : 'Recuperar Senha'}
+        text={forgotMutation.isPending ? 'Sending...' : 'Reset Password'}
         styles="font-bold justify-center cursor-pointer"
         type="submit"
+        disabled={forgotMutation.isPending}
       />
     </form>
   );

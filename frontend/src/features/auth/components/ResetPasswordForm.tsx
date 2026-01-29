@@ -1,4 +1,4 @@
-import { Button, PasswordInput } from '@/components'; // Seus componentes
+import { Button, PasswordInput } from '@/components';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
@@ -13,17 +13,17 @@ interface IProps {
   token: string;
 }
 
-export const ResetPasswordForm = ({ token }: IProps) => {
-  const schema = z
-    .object({
-      password: passwordRules,
-      confirmPassword: z.string(),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      message: 'As senhas não coincidem',
-      path: ['confirmPassword'],
-    });
+const schema = z
+  .object({
+    password: passwordRules,
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'As senhas não coincidem',
+    path: ['confirmPassword'],
+  });
 
+export const ResetPasswordForm = ({ token }: IProps) => {
   const navigate = useNavigate();
 
   type FormSchema = z.infer<typeof schema>;

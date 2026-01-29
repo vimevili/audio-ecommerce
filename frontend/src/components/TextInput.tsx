@@ -13,9 +13,11 @@ interface IProps<T extends FieldValues> {
   required?: boolean;
   Icon?: LucideIcon;
   type?: 'text' | 'password' | 'email';
+  autoComplete?: string;
   rightElement?: React.ReactNode;
   error: FieldError | undefined;
   styles?: string;
+  disabled?: boolean;
 }
 
 function TextInput<T extends FieldValues>({
@@ -25,9 +27,11 @@ function TextInput<T extends FieldValues>({
   required,
   Icon,
   type,
+  autoComplete,
   rightElement,
   error,
   styles,
+  disabled,
 }: IProps<T>) {
   const borderClass = error
     ? 'border-red-500 text-red-500'
@@ -43,8 +47,10 @@ function TextInput<T extends FieldValues>({
         <input
           placeholder={placeholder}
           type={type || 'text'}
+          autoComplete={autoComplete}
           {...register(name, { required })}
           className={`text-md md:text-lg outline-none w-full bg-transparent text-gray-400 ${error ? 'focus:text-red-500' : 'focus:text-audio-green'} transition-colors placeholder:text-gray-400 `}
+          disabled={disabled}
         />
 
         {rightElement && (

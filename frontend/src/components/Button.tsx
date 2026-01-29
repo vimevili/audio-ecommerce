@@ -1,11 +1,9 @@
-import type { LucideProps } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface IProps {
   text: string;
   styles?: string;
-  Icon?: React.ForwardRefExoticComponent<
-    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
-  >;
+  Icon?: LucideIcon;
   type?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
 }

@@ -146,6 +146,7 @@ function SignUpForm({ showTitle }: IProps) {
         register={register}
         error={errors.name}
         Icon={User}
+        disabled={registerMutation.isPending}
       />
       <TextInput
         name="username"
@@ -153,6 +154,7 @@ function SignUpForm({ showTitle }: IProps) {
         register={register}
         error={errors.username}
         Icon={UsernameIcon}
+        disabled={registerMutation.isPending}
       />
 
       <TextInput
@@ -161,6 +163,7 @@ function SignUpForm({ showTitle }: IProps) {
         register={register}
         error={errors.email}
         Icon={EmailIcon}
+        disabled={registerMutation.isPending}
       />
 
       <PasswordInput
@@ -168,6 +171,7 @@ function SignUpForm({ showTitle }: IProps) {
         watch={watch}
         page="sign-up"
         error={errors.password}
+        disabled={registerMutation.isPending}
       />
       <div className="flex flex-col gap-4">
         <Button
@@ -182,6 +186,7 @@ function SignUpForm({ showTitle }: IProps) {
           <Link
             to="/sign-in"
             className="text-audio-green underline underline-offset-1 ml-1"
+            disabled={registerMutation.isPending}
           >
             Sign In here
           </Link>

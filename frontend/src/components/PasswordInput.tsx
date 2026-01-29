@@ -17,6 +17,7 @@ interface IProps<T extends FieldValues> {
   error: FieldError | undefined;
   name?: string;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 const requirements = [
@@ -33,6 +34,7 @@ export default function PasswordInput<T extends FieldValues>({
   error,
   name,
   placeholder,
+  disabled,
 }: IProps<T>) {
   const [showPassword, setShowPassword] = useState(false);
   const inputType = showPassword ? 'text' : 'password';
@@ -60,6 +62,7 @@ export default function PasswordInput<T extends FieldValues>({
         Icon={Lock}
         placeholder={placeholder ?? 'Password'}
         rightElement={toggleIcon}
+        disabled={disabled}
       />
 
       {page === 'sign-up' && (
