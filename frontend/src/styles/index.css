@@ -10,12 +10,12 @@
 
 @layer components {
   .input-container {
-    @apply flex items-center gap-2 bg-white p-2 rounded-md border border-transparent transition-colors focus-within:border-audio-green focus-within:border-2;
+    @apply flex items-center gap-2 bg-white p-1 md:p-2 md:gap-2 rounded-md border border-transparent transition-colors focus-within:border-audio-green focus-within:border-2;
 
     @apply focus-within:border-audio-green focus-within:text-audio-green;
   }
   .auth-page-container {
-    @apply min-h-screen w-full p-10 py-20 md:p-30 md:py-40 bg-cover bg-center bg-no-repeat flex flex-col items-center justify-between;
+    @apply min-h-screen w-full p-10 py-20 sm:px-30 sm:py-40 bg-cover bg-center bg-no-repeat flex flex-col items-center justify-between;
   }
 }
 
@@ -26,6 +26,12 @@
   .audio-subtitle {
     @apply text-sm text-white;
   }
+}
+
+[data-sonner-toast] [data-button] {
+  font-family: 'DM Sans', sans-serif;
+  background-color: #0acf83 !important;
+  margin-left: 0 !important;
 }
 
 #root {

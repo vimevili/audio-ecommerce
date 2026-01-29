@@ -15,6 +15,7 @@ interface IProps<T extends FieldValues> {
   type?: 'text' | 'password' | 'email';
   rightElement?: React.ReactNode;
   error: FieldError | undefined;
+  styles?: string;
 }
 
 function TextInput<T extends FieldValues>({
@@ -26,6 +27,7 @@ function TextInput<T extends FieldValues>({
   type,
   rightElement,
   error,
+  styles,
 }: IProps<T>) {
   const borderClass = error
     ? 'border-red-500 text-red-500'
@@ -34,7 +36,7 @@ function TextInput<T extends FieldValues>({
   return (
     <div className="flex flex-col gap-1 justify-end">
       <div
-        className={`input-container bg-white text-gray-400 transition-all border ${borderClass}`}
+        className={`input-container bg-white text-gray-400 transition-all border ${borderClass} ${styles}`}
       >
         {Icon && <Icon className="transition-colors shrink-0" size={20} />}
 
@@ -42,7 +44,7 @@ function TextInput<T extends FieldValues>({
           placeholder={placeholder}
           type={type || 'text'}
           {...register(name, { required })}
-          className={`text-lg outline-none w-full bg-transparent text-gray-400 ${error ? 'focus:text-red-500' : 'focus:text-audio-green'} transition-colors placeholder:text-gray-400 `}
+          className={`text-md md:text-lg outline-none w-full bg-transparent text-gray-400 ${error ? 'focus:text-red-500' : 'focus:text-audio-green'} transition-colors placeholder:text-gray-400 `}
         />
 
         {rightElement && (
@@ -50,7 +52,7 @@ function TextInput<T extends FieldValues>({
         )}
       </div>
       {error && (
-        <p className="w-fit text-xs text-red-500 ml-1 animate-in fade-in slide-in-from-top-1">
+        <p className="w-fit text-xs text-red-300 md:text-red-500 ml-1 animate-in fade-in slide-in-from-top-1 bg-zinc-800/80 md:bg-transparent">
           {error.message}
         </p>
       )}

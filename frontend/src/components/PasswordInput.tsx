@@ -13,8 +13,10 @@ import TextInput from './TextInput';
 interface IProps<T extends FieldValues> {
   register: UseFormRegister<T>;
   watch: UseFormWatch<T>;
-  page: 'sign-in' | 'sign-up';
+  page?: 'sign-in' | 'sign-up' | 'reset';
   error: FieldError | undefined;
+  name?: string;
+  placeholder?: string;
 }
 
 const requirements = [
@@ -29,6 +31,8 @@ export default function PasswordInput<T extends FieldValues>({
   watch,
   page,
   error,
+  name,
+  placeholder,
 }: IProps<T>) {
   const [showPassword, setShowPassword] = useState(false);
   const inputType = showPassword ? 'text' : 'password';
@@ -49,16 +53,15 @@ export default function PasswordInput<T extends FieldValues>({
   return (
     <div className="space-y-3">
       <TextInput
-        name={'password' as Path<T>}
+        name={(name ?? 'password') as Path<T>}
         type={inputType}
         register={register}
         error={error}
         Icon={Lock}
-        placeholder="Password"
+        placeholder={placeholder ?? 'Password'}
         rightElement={toggleIcon}
       />
 
-      {/* Checklist Visual */}
       {page === 'sign-up' && (
         <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-100">
           {requirements.map((req) => {
