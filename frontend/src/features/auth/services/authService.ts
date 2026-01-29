@@ -1,9 +1,13 @@
 import api from '@/api';
-import type { LoginRequest, RegisterRequest } from '../models';
-import type IUserResponse from '@/interfaces/auth/IUserResponse';
+import type {
+  IForgotPasswordRequest,
+  ILoginRequest,
+  IRegisterRequest,
+} from '../models';
+import type { IResetPasswordRequest, IUserResponse } from '@/interfaces/auth';
 
 export const authService = {
-  login: async (credentials: LoginRequest) => {
+  login: async (credentials: ILoginRequest) => {
     const { data } = await api.post<string>('/auth/login', credentials);
     return data;
   },
@@ -12,37 +16,46 @@ export const authService = {
     await api.post<string>('/auth/logout');
   },
 
-  register: async (userData: RegisterRequest) => {
+  register: async (userData: IRegisterRequest) => {
     const { data } = await api.post<string>('/auth/register', userData);
     return data;
   },
 
-  forgotPassword: async (email: string) => {
+  forgotPassword: async ({ email }: IForgotPasswordRequest) => {
     const { data } = await api.post<string>('/auth/forgot-password', { email });
     return data;
   },
 
-  resetPassword: async (email: string) => {
-    const { data } = await api.post<string>('/auth/reset-password', { email });
+  resetPassword: async (info: IResetPasswordRequest) => {
+    const { data } = await api.post<string>('/auth/reset-password', {
+      ...info,
+    });
     return data;
   },
 
   verifyUsername: async (username: string) => {
-    const { data } = await api.get<boolean>('/user/check-username', {
-      params: username,
+    const { data } = await api.get<boolean>('/users/check-username', {
+      params: { username },
     });
     return data;
   },
 
   verifyEmail: async (email: string) => {
-    const { data } = await api.get<boolean>('/user/check-email', {
-      params: email,
+    const { data } = await api.get<boolean>('/users/check-email', {
+      params: { email },
     });
     return data;
   },
 
   validateUser: async (): Promise<IUserResponse> => {
     const { data } = await api.get<IUserResponse>('/auth/me');
+    return data;
+  },
+
+  resendConfirmationEmail: async (email: string): Promise<string> => {
+    const { data } = await api.post<string>('/auth/resend-confirmation', {
+      email,
+    });
     return data;
   },
 };

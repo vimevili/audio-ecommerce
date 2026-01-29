@@ -15,6 +15,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     queryFn: authService.validateUser,
     retry: false,
     staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
   });
 
   const logout = async () => {
