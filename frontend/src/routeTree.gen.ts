@@ -13,8 +13,8 @@ import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ForgotMyPasswordRouteImport } from './routes/forgot-my-password'
-import { Route as _protectedRouteImport } from './routes/__protected'
-import { Route as _protectedIndexRouteImport } from './routes/__protected/index'
+import { Route as ProtectedRouteImport } from './routes/_protected'
+import { Route as ProtectedIndexRouteImport } from './routes/_protected/index'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -36,18 +36,18 @@ const ForgotMyPasswordRoute = ForgotMyPasswordRouteImport.update({
   path: '/forgot-my-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const _protectedRoute = _protectedRouteImport.update({
-  id: '/__protected',
+const ProtectedRoute = ProtectedRouteImport.update({
+  id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
-const _protectedIndexRoute = _protectedIndexRouteImport.update({
+const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => _protectedRoute,
+  getParentRoute: () => ProtectedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof _protectedIndexRoute
+  '/': typeof ProtectedIndexRoute
   '/forgot-my-password': typeof ForgotMyPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
@@ -58,16 +58,16 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
-  '/': typeof _protectedIndexRoute
+  '/': typeof ProtectedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/__protected': typeof _protectedRouteWithChildren
+  '/_protected': typeof ProtectedRouteWithChildren
   '/forgot-my-password': typeof ForgotMyPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
-  '/__protected/': typeof _protectedIndexRoute
+  '/_protected/': typeof ProtectedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -81,16 +81,16 @@ export interface FileRouteTypes {
   to: '/forgot-my-password' | '/reset-password' | '/sign-in' | '/sign-up' | '/'
   id:
     | '__root__'
-    | '/__protected'
+    | '/_protected'
     | '/forgot-my-password'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
-    | '/__protected/'
+    | '/_protected/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  _protectedRoute: typeof _protectedRouteWithChildren
+  ProtectedRoute: typeof ProtectedRouteWithChildren
   ForgotMyPasswordRoute: typeof ForgotMyPasswordRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignInRoute: typeof SignInRoute
@@ -127,37 +127,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotMyPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/__protected': {
-      id: '/__protected'
+    '/_protected': {
+      id: '/_protected'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof _protectedRouteImport
+      preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/__protected/': {
-      id: '/__protected/'
+    '/_protected/': {
+      id: '/_protected/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof _protectedIndexRouteImport
-      parentRoute: typeof _protectedRoute
+      preLoaderRoute: typeof ProtectedIndexRouteImport
+      parentRoute: typeof ProtectedRoute
     }
   }
 }
 
-interface _protectedRouteChildren {
-  _protectedIndexRoute: typeof _protectedIndexRoute
+interface ProtectedRouteChildren {
+  ProtectedIndexRoute: typeof ProtectedIndexRoute
 }
 
-const _protectedRouteChildren: _protectedRouteChildren = {
-  _protectedIndexRoute: _protectedIndexRoute,
+const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedIndexRoute: ProtectedIndexRoute,
 }
 
-const _protectedRouteWithChildren = _protectedRoute._addFileChildren(
-  _protectedRouteChildren,
+const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
+  ProtectedRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
-  _protectedRoute: _protectedRouteWithChildren,
+  ProtectedRoute: ProtectedRouteWithChildren,
   ForgotMyPasswordRoute: ForgotMyPasswordRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignInRoute: SignInRoute,

@@ -3,6 +3,7 @@ import { useAuth } from './hooks';
 import { router } from './router.ts';
 import SplashScreen from './components/SplashScreen.tsx';
 import { Toaster } from 'sonner';
+
 export function App() {
   const auth = useAuth();
 

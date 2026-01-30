@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import { authService } from '@/features/auth/services/authService';
 
-export const Route = createFileRoute('/__protected')({
+export const Route = createFileRoute('/_protected')({
   beforeLoad: async ({ location }) => {
     try {
       await authService.validateUser();
