@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import { twMerge } from 'tailwind-merge';
 
 interface IProps {
   text: string;
@@ -6,13 +7,18 @@ interface IProps {
   Icon?: LucideIcon;
   type?: 'button' | 'reset' | 'submit';
   disabled?: boolean;
+  onClick?: () => void;
 }
 
-function Button({ text, styles, Icon, type, disabled }: IProps) {
+function Button({ text, styles, Icon, type, disabled, onClick }: IProps) {
   return (
     <button
       type={type ?? 'button'}
-      className={`input-container cursor-pointer bg-audio-green text-white focus:outline-none ${styles} disabled:bg-[#899993] disabled:cursor-auto`}
+      onClick={onClick}
+      className={twMerge(
+        'input-container cursor-pointer bg-audio-green text-white focus:outline-none disabled:bg-[#899993] disabled:cursor-auto',
+        styles,
+      )}
       disabled={disabled}
     >
       {text}

@@ -5,6 +5,7 @@ import {
   type Path,
   type UseFormRegister,
 } from 'react-hook-form';
+import { twMerge } from 'tailwind-merge';
 
 interface IProps<T extends FieldValues> {
   name: Path<T>;
@@ -40,7 +41,11 @@ function TextInput<T extends FieldValues>({
   return (
     <div className="flex flex-col gap-1 justify-end">
       <div
-        className={`input-container bg-white text-gray-400 transition-all border ${borderClass} ${styles}`}
+        className={twMerge(
+          'input-container bg-white text-gray-400 transition-all border',
+          borderClass,
+          styles,
+        )}
       >
         {Icon && <Icon className="transition-colors shrink-0" size={20} />}
 
