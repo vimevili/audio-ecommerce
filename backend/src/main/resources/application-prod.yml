@@ -1,0 +1,7 @@
+app:
+  url:
+    frontend: https://site.com
+    backend: https://api.site.com
+  security:
+    cookie-secure: true
+    same-site: None

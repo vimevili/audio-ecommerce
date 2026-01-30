@@ -1,20 +1,36 @@
 package com.vimevili.audio_ecommerce.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vimevili.audio_ecommerce.enums.UserRole;
-import jakarta.persistence.*;
+import java.io.Serial;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vimevili.audio_ecommerce.enums.UserRole;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class UserModel implements Serializable, UserDetails {
+public class UserModel implements UserDetails {
 
     @Serial
     private static final long serialVersionUID = -5261257122332581559L;
@@ -41,6 +57,9 @@ public class UserModel implements Serializable, UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Column(nullable = false)
+    private boolean enabled; 
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ReviewModel> reviews = new HashSet<>();
@@ -48,21 +67,24 @@ public class UserModel implements Serializable, UserDetails {
     protected UserModel() {}
 
 
-    public UserModel(String name, String username, String password, String email, String role) {
-        this.name = name;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        setRole(role);
-    }
-    public UserModel(String name, String picture,String username, String password, String email, String role) {
-        this.name = name;
-        this.picture = picture;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        setRole(role);
-    }
+    public UserModel(String name, String username, String password, String email, UserRole role) {
+    this.name = name;
+    this.username = username;
+    this.password = password;
+    this.email = email;
+    this.role = role; 
+    this.enabled = false; 
+}
+
+public UserModel(String name, String picture, String username, String password, String email, UserRole role) {
+    this.name = name;
+    this.picture = picture;
+    this.username = username;
+    this.password = password;
+    this.email = email;
+    this.role = role;
+    this.enabled = false;
+}
 
     public UserRole getRole() {
         return role;
@@ -105,6 +127,15 @@ public class UserModel implements Serializable, UserDetails {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return this.enabled; 
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override

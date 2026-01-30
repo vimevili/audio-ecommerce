@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-AudioEcommerceApplication<audio-ecommerce>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.vimevili.audio_ecommerce.AudioEcommerceApplication",
+      "projectName": "audio-ecommerce",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
