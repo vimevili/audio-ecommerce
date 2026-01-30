@@ -1,15 +1,24 @@
 package com.vimevili.audio_ecommerce.models;
 
-import jakarta.persistence.*;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
 @Entity
-@Table(name = "cart")
+@Table(name = "carts")
 public class CartModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1130302548136032857L;

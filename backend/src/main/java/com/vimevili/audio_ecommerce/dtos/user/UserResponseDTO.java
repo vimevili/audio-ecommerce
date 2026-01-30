@@ -5,6 +5,10 @@ import com.vimevili.audio_ecommerce.enums.UserRole;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UserResponseDTO( 
+    @Schema(description = "Name of the user", example = "John Doe")
+    String name,
+    @Schema(description = "Picture of the user")
+    String picture,
     @Schema(description = "Username of the user", example = "johndoe")
     String username,
     @Schema(description = "Email of the user", example = "johndoe@example.com")
