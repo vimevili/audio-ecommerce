@@ -3,7 +3,7 @@ import { CircleUser, LogOut } from 'lucide-react';
 import { DropdownMenu } from 'radix-ui';
 
 export default function AvatarMenu() {
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
 
   const profilePicture = user?.picture ? (
     <img
@@ -14,6 +14,10 @@ export default function AvatarMenu() {
   ) : (
     <CircleUser className="w-full h-full text-audio-green" />
   );
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <DropdownMenu.Root>

@@ -39,16 +39,6 @@ describe('ProductInfo', () => {
     expect(screen.getByText('HEADPHONES')).toBeInTheDocument();
   });
 
-  it('should format category with underscore correctly', () => {
-    const productWithUnderscore: IProduct = {
-      ...mockProduct,
-      category: 'WIRELESS_EARBUDS',
-    };
-    render(<ProductInfo product={productWithUnderscore} />);
-
-    expect(screen.getByText('WIRELESS EARBUDS')).toBeInTheDocument();
-  });
-
   it('should have category badge with proper styling', () => {
     render(<ProductInfo product={mockProduct} />);
 

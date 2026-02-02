@@ -2,6 +2,7 @@ import { AvatarMenu } from '@/components';
 import { logoSvg } from '@/assets';
 import { ShoppingCart } from 'lucide-react';
 import { MobileMenu, SearchBar } from './';
+import { Link } from '@tanstack/react-router';
 
 interface NavbarProps {
   layout: 'mobile' | 'desktop';
@@ -21,10 +22,10 @@ export default function Navbar({ layout }: NavbarProps) {
   return (
     <nav className="w-full bg-white shadow-sm shrink-0">
       <div className="max-w-375 mx-auto px-6 py-4 flex items-center justify-between gap-8">
-        <div className="flex items-center gap-2 shrink-0">
+        <Link to="/" className="flex items-center gap-2 shrink-0">
           <img src={logoSvg} alt="Audio" className="w-10 h-10" />
           <span className="audio-title text-3xl! text-black!">Audio</span>
-        </div>
+        </Link>
 
         <div className="flex-1 max-w-xl">
           <SearchBar />
