@@ -1,7 +1,6 @@
 import { TextInput } from '@/components';
-import { Route } from '@/routes/index';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { Search, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
@@ -11,9 +10,14 @@ const schema = z.object({
 });
 
 export default function SearchBar() {
-  const navigate = useNavigate({ from: Route.fullPath });
+  const navigate = useNavigate();
+  const routerState = useRouterState();
 
-  const searchParams = Route.useSearch();
+  // Get current search params if we're on the home page
+  const currentSearch =
+    routerState.location.pathname === '/'
+      ? (routerState.location.search as { search?: string })?.search
+      : undefined;
 
   type SearchSchema = z.infer<typeof schema>;
 
@@ -26,7 +30,7 @@ export default function SearchBar() {
   } = useForm<SearchSchema>({
     resolver: zodResolver(schema),
     defaultValues: {
-      search: searchParams.search || '',
+      search: currentSearch || '',
     },
   });
 
@@ -34,24 +38,20 @@ export default function SearchBar() {
 
   const onSubmit = (data: SearchSchema) => {
     navigate({
-      to: '.',
-      search: (prev) => ({
-        ...prev,
+      to: '/',
+      search: {
         search: data.search || undefined,
-      }),
-      replace: true,
+      },
     });
   };
 
   const handleClear = () => {
     setValue('search', '');
     navigate({
-      to: '.',
-      search: (prev) => ({
-        ...prev,
+      to: '/',
+      search: {
         search: undefined,
-      }),
-      replace: true,
+      },
     });
   };
 
