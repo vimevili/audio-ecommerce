@@ -1,21 +1,16 @@
 import { TextInput } from '@/components';
-import { Route } from '@/routes/_protected/index';
+import { Route } from '@/routes/index';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from '@tanstack/react-router';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 
 const schema = z.object({
-  search: z.string().min(1, 'Search is too short!'),
+  search: z.string(),
 });
 
-interface IProps {
-  layout: 'mobile' | 'desktop';
-}
-
-export default function SearchBar({ layout }: IProps) {
-  const isMobile = layout == 'mobile';
+export default function SearchBar() {
   const navigate = useNavigate({ from: Route.fullPath });
 
   const searchParams = Route.useSearch();
@@ -25,6 +20,8 @@ export default function SearchBar({ layout }: IProps) {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<SearchSchema>({
     resolver: zodResolver(schema),
@@ -33,12 +30,26 @@ export default function SearchBar({ layout }: IProps) {
     },
   });
 
+  const searchValue = watch('search');
+
   const onSubmit = (data: SearchSchema) => {
     navigate({
-      to: isMobile ? '.' : '.',
+      to: '.',
       search: (prev) => ({
         ...prev,
         search: data.search || undefined,
+      }),
+      replace: true,
+    });
+  };
+
+  const handleClear = () => {
+    setValue('search', '');
+    navigate({
+      to: '.',
+      search: (prev) => ({
+        ...prev,
+        search: undefined,
       }),
       replace: true,
     });
@@ -52,7 +63,20 @@ export default function SearchBar({ layout }: IProps) {
         placeholder="Search a product"
         register={register}
         Icon={Search}
-        styles="w-full border-1 border-gray-300 rounded-lg mt-3 p-3"
+        onIconClick={handleSubmit(onSubmit)}
+        rightElement={
+          searchValue ? (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              aria-label="Clear search"
+            >
+              <X size={18} className="text-gray-400 hover:text-gray-600" />
+            </button>
+          ) : null
+        }
+        styles="w-full border-1 border-gray-300 rounded-lg mt-3 md:mt-0 p-3 md:p-1.5"
       />
     </form>
   );

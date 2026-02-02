@@ -1,61 +1,52 @@
-import { Button } from '@/components';
-import { Route } from '@/routes/_protected/index';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Route } from '@/routes/index';
 import { useNavigate } from '@tanstack/react-router';
-import { useForm } from 'react-hook-form';
-import z from 'zod';
 
-const schema = z.object({
-  category: z.string().min(1, 'Category is too short!'),
-});
+type Category = 'HEADPHONES' | 'HEADSETS';
+
+const categories: { label: string; value: Category }[] = [
+  { label: 'Headphones', value: 'HEADPHONES' },
+  { label: 'Headsets', value: 'HEADSETS' },
+];
 
 const CategoryToggle: React.FC = () => {
-  const categories = ['Headphones', 'Headsets'];
-  type CategorySchema = z.infer<typeof schema>;
-
   const navigate = useNavigate({ from: Route.fullPath });
   const searchParams = Route.useSearch();
 
-  const { handleSubmit, setValue } = useForm<CategorySchema>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      category: searchParams.category || categories[0],
-    },
-  });
-
-  const handleCategoryClick = (category: string) => {
-    setValue('category', category);
-    handleSubmit(onSubmit)();
-  };
-
-  const onSubmit = (data: CategorySchema) => {
+  const handleCategoryClick = (category: Category) => {
     navigate({
       to: '.',
       search: (prev) => ({
         ...prev,
-        category: data.category || undefined,
+        category,
       }),
       replace: true,
     });
   };
 
+  const isActive = (value: Category) =>
+    searchParams.category === value ||
+    (!searchParams.category && value === categories[0].value);
+
   return (
-    <div className="flex gap-1 pb-6 pr-6  mx-auto">
+    <div className="flex gap-8 pb-6 pr-6">
       {categories.map((category) => (
-        <Button
-          text={category}
-          key={category}
-          onClick={() => handleCategoryClick(category)}
-          styles={`
-            px-5 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 w-fit
+        <button
+          key={category.value}
+          onClick={() => handleCategoryClick(category.value)}
+          className={`
+            relative text-base font-medium transition-all duration-300 pb-2
             ${
-              searchParams.category === category ||
-              (!searchParams.category && category === categories[0])
-                ? 'bg-[#0ACF83] text-white shadow-md shadow-green-200'
-                : 'bg-transparent text-gray-400 hover:text-gray-600'
+              isActive(category.value)
+                ? 'text-gray-900'
+                : 'text-gray-400 hover:text-gray-600'
             }
           `}
-        />
+        >
+          {category.label}
+          {isActive(category.value) && (
+            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-audio-green rounded-full" />
+          )}
+        </button>
       ))}
     </div>
   );

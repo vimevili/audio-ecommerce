@@ -13,6 +13,7 @@ interface IProps<T extends FieldValues> {
   register: UseFormRegister<T>;
   required?: boolean;
   Icon?: LucideIcon;
+  onIconClick?: () => void;
   type?: 'text' | 'password' | 'email';
   autoComplete?: string;
   rightElement?: React.ReactNode;
@@ -27,6 +28,7 @@ function TextInput<T extends FieldValues>({
   register,
   required,
   Icon,
+  onIconClick,
   type,
   autoComplete,
   rightElement,
@@ -47,7 +49,20 @@ function TextInput<T extends FieldValues>({
           styles,
         )}
       >
-        {Icon && <Icon className="transition-colors shrink-0" size={20} />}
+        {Icon && (
+          <button
+            type="button"
+            onClick={onIconClick}
+            className={
+              onIconClick
+                ? 'cursor-pointer hover:text-audio-green transition-colors'
+                : 'cursor-default'
+            }
+            tabIndex={onIconClick ? 0 : -1}
+          >
+            <Icon className="transition-colors shrink-0" size={20} />
+          </button>
+        )}
 
         <input
           placeholder={placeholder}
