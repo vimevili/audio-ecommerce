@@ -5,6 +5,7 @@ import {
   type Path,
   type UseFormRegister,
 } from 'react-hook-form';
+import { twMerge } from 'tailwind-merge';
 
 interface IProps<T extends FieldValues> {
   name: Path<T>;
@@ -12,6 +13,7 @@ interface IProps<T extends FieldValues> {
   register: UseFormRegister<T>;
   required?: boolean;
   Icon?: LucideIcon;
+  onIconClick?: () => void;
   type?: 'text' | 'password' | 'email';
   autoComplete?: string;
   rightElement?: React.ReactNode;
@@ -26,6 +28,7 @@ function TextInput<T extends FieldValues>({
   register,
   required,
   Icon,
+  onIconClick,
   type,
   autoComplete,
   rightElement,
@@ -40,9 +43,26 @@ function TextInput<T extends FieldValues>({
   return (
     <div className="flex flex-col gap-1 justify-end">
       <div
-        className={`input-container bg-white text-gray-400 transition-all border ${borderClass} ${styles}`}
+        className={twMerge(
+          'input-container bg-white text-gray-400 transition-all border',
+          borderClass,
+          styles,
+        )}
       >
-        {Icon && <Icon className="transition-colors shrink-0" size={20} />}
+        {Icon && (
+          <button
+            type="button"
+            onClick={onIconClick}
+            className={
+              onIconClick
+                ? 'cursor-pointer hover:text-audio-green transition-colors'
+                : 'cursor-default'
+            }
+            tabIndex={onIconClick ? 0 : -1}
+          >
+            <Icon className="transition-colors shrink-0" size={20} />
+          </button>
+        )}
 
         <input
           placeholder={placeholder}

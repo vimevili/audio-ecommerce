@@ -10,12 +10,15 @@
 
 @layer components {
   .input-container {
-    @apply flex items-center gap-2 bg-white p-1 md:p-2 md:gap-2 rounded-md border border-transparent transition-colors focus-within:border-audio-green focus-within:border-2;
+    @apply w-full flex items-center gap-2 bg-white p-1 md:p-2 md:gap-2 rounded-md border border-transparent transition-colors focus-within:border-audio-green focus-within:border-2;
 
     @apply focus-within:border-audio-green focus-within:text-audio-green;
   }
   .auth-page-container {
     @apply min-h-screen w-full p-10 py-20 sm:px-30 sm:py-40 bg-cover bg-center bg-no-repeat flex flex-col items-center justify-between;
+  }
+  .page-container {
+    @apply min-h-screen w-full flex flex-col justify-between;
   }
 }
 
@@ -42,4 +45,30 @@
   font-optical-sizing: auto;
   font-style: normal;
   text-align: center;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0acf83;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #09b874;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #0acf83 #f1f1f1;
 }

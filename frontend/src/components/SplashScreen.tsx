@@ -1,12 +1,11 @@
 import { logoSvg } from '@/assets';
 
-const App = () => {
+const SplashScreen = () => {
   const primaryColor = '#0acf83';
   const accentColor = '#ffc120';
 
   return (
-    <div className="relative min-h-screen bg-[#02140d] overflow-hidden flex flex-col items-center justify-center font-sans">
-      {/* Estilos customizados para animações complexas */}
+    <div className="fixed inset-0 z-9999 bg-[#02140d] overflow-hidden flex flex-col items-center justify-center">
       <style>{`
         @keyframes soundWave {
           0% { transform: scale(1); opacity: 0.4; }
@@ -30,8 +29,6 @@ const App = () => {
           50% { transform: translateY(-20px); }
         }
       `}</style>
-
-      {/* Ondas de som de fundo */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
           className="absolute w-64 h-64 border-2 rounded-full animate-wave"
@@ -46,21 +43,17 @@ const App = () => {
           style={{ borderColor: primaryColor, animationDelay: '1.2s' }}
         ></div>
       </div>
-
-      {/* Elemento Central: Headphone */}
       <div className="relative z-10 flex flex-col items-center">
         <div className="float">
           <img src={logoSvg} alt="Audio Logo" className="h-30" />
         </div>
 
-        {/* Nome da Marca */}
         <div className="text-center mb-12">
           <h2 className="audio-title text-white text-3xl! font-black tracking-tighter uppercase italic flex items-center gap-2">
             AUDIO APP
           </h2>
         </div>
 
-        {/* Equalizador Animado */}
         <div className="flex items-end gap-1.5 h-16 mb-12">
           {[...Array(8)].map((_, i) => (
             <div
@@ -79,4 +72,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default SplashScreen;

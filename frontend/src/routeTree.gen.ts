@@ -13,8 +13,7 @@ import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ForgotMyPasswordRouteImport } from './routes/forgot-my-password'
-import { Route as _protectedRouteImport } from './routes/__protected'
-import { Route as _protectedIndexRouteImport } from './routes/__protected/index'
+import { Route as IndexRouteImport } from './routes/index'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -36,38 +35,33 @@ const ForgotMyPasswordRoute = ForgotMyPasswordRouteImport.update({
   path: '/forgot-my-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const _protectedRoute = _protectedRouteImport.update({
-  id: '/__protected',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const _protectedIndexRoute = _protectedIndexRouteImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => _protectedRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof _protectedIndexRoute
+  '/': typeof IndexRoute
   '/forgot-my-password': typeof ForgotMyPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/forgot-my-password': typeof ForgotMyPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
-  '/': typeof _protectedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/__protected': typeof _protectedRouteWithChildren
+  '/': typeof IndexRoute
   '/forgot-my-password': typeof ForgotMyPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
-  '/__protected/': typeof _protectedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -78,19 +72,18 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
   fileRoutesByTo: FileRoutesByTo
-  to: '/forgot-my-password' | '/reset-password' | '/sign-in' | '/sign-up' | '/'
+  to: '/' | '/forgot-my-password' | '/reset-password' | '/sign-in' | '/sign-up'
   id:
     | '__root__'
-    | '/__protected'
+    | '/'
     | '/forgot-my-password'
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
-    | '/__protected/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  _protectedRoute: typeof _protectedRouteWithChildren
+  IndexRoute: typeof IndexRoute
   ForgotMyPasswordRoute: typeof ForgotMyPasswordRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SignInRoute: typeof SignInRoute
@@ -127,37 +120,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotMyPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/__protected': {
-      id: '/__protected'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof _protectedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/__protected/': {
-      id: '/__protected/'
+    '/': {
+      id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof _protectedIndexRouteImport
-      parentRoute: typeof _protectedRoute
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface _protectedRouteChildren {
-  _protectedIndexRoute: typeof _protectedIndexRoute
-}
-
-const _protectedRouteChildren: _protectedRouteChildren = {
-  _protectedIndexRoute: _protectedIndexRoute,
-}
-
-const _protectedRouteWithChildren = _protectedRoute._addFileChildren(
-  _protectedRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
-  _protectedRoute: _protectedRouteWithChildren,
+  IndexRoute: IndexRoute,
   ForgotMyPasswordRoute: ForgotMyPasswordRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SignInRoute: SignInRoute,

@@ -41,6 +41,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/auth/resend-confirmation").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/check-username").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users/check-email").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
                         .anyRequest().authenticated()
