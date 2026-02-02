@@ -1,5 +1,6 @@
 import api from '@/api';
 import type IProduct from '@/interfaces/IProduct';
+import type IProductDetails from '@/interfaces/IProductDetails';
 
 export type ProductCategory = 'HEADPHONES' | 'HEADSETS';
 export type ProductSortField = 'NAME' | 'PRICE' | 'RATING' | 'REVIEWS';
@@ -19,7 +20,9 @@ export const homeService = {
   },
 
   getProduct: async (productId: string) => {
-    const { data } = await api.get<IProduct>(`/products/id/${productId}`);
+    const { data } = await api.get<IProductDetails>(
+      `/products/id/${productId}`,
+    );
     return data;
   },
 };
