@@ -1,12 +1,11 @@
 import { logoSvg } from '@/assets';
 
-const App = () => {
+const SplashScreen = () => {
   const primaryColor = '#0acf83';
   const accentColor = '#ffc120';
 
   return (
     <div className="fixed inset-0 z-9999 bg-[#02140d] overflow-hidden flex flex-col items-center justify-center">
-      {' '}
       <style>{`
         @keyframes soundWave {
           0% { transform: scale(1); opacity: 0.4; }
@@ -73,4 +72,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default SplashScreen;
