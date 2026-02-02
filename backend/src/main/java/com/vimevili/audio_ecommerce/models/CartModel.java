@@ -80,7 +80,9 @@ public class CartModel implements Serializable {
     }
 
     public Double calculateTotal() {
-        totalCartValue = this.products.stream().map(CartItemModel::calculateTotalPrice).reduce( 0.0, Double::sum);
+        totalCartValue = this.products.stream()
+                .mapToDouble(CartItemModel::calculateTotalPrice)
+                .sum();
         return totalCartValue;
     }
 

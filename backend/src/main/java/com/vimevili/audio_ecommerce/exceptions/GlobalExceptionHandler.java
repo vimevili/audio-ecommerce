@@ -71,6 +71,17 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Parameter", message, request);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<StandardErrorInfo> handleGenericException(Exception ex, HttpServletRequest request) {
+        ex.printStackTrace();
+        
+        String message = ex.getMessage();
+        if (message == null || message.isBlank()) {
+            message = "An unexpected error occurred.";
+        }
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", message, request);
+    }
+
     private ResponseEntity<StandardErrorInfo> buildErrorResponse(HttpStatus status, String error, String message, HttpServletRequest request) {
         StandardErrorInfo err = new StandardErrorInfo(
                 Instant.now(),           
