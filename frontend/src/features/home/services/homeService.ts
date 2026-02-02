@@ -1,24 +1,25 @@
 import api from '@/api';
 import type IProduct from '@/interfaces/IProduct';
 
+export type ProductCategory = 'HEADPHONES' | 'HEADSETS';
+export type ProductSortField = 'NAME' | 'PRICE' | 'RATING' | 'REVIEWS';
+export type SortDirection = 'asc' | 'desc';
+
+export interface ProductsQueryParams {
+  category?: ProductCategory;
+  search?: string;
+  sortBy?: ProductSortField;
+  sortDir?: SortDirection;
+}
+
 export const homeService = {
-  search: async (name: string) => {
-    const { data } = await api.get<IProduct[]>('/products/search', {
-      params: { name },
-    });
+  getProducts: async (params: ProductsQueryParams = {}) => {
+    const { data } = await api.get<IProduct[]>('/products', { params });
     return data;
   },
 
   getProduct: async (productId: string) => {
     const { data } = await api.get<IProduct>(`/products/id/${productId}`);
-    return data;
-  },
-
-  getProductsByCategory: async (category: 'HEADPHONES' | 'HEADSETS') => {
-    const parsedCategory = category.toLocaleUpperCase();
-    const { data } = await api.get<IProduct[]>(
-      `/products/category/${parsedCategory}`,
-    );
     return data;
   },
 };
