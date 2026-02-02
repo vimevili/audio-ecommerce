@@ -1,23 +1,30 @@
 package com.vimevili.audio_ecommerce.controllers;
 
+import java.util.Set;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.vimevili.audio_ecommerce.dtos.product.ProductInfoDTO;
 import com.vimevili.audio_ecommerce.enums.ProductCategory;
-import com.vimevili.audio_ecommerce.services.ProductService;
+import com.vimevili.audio_ecommerce.enums.ProductSortField;
 import com.vimevili.audio_ecommerce.infra.docs.ApiGlobalErrors;
 import com.vimevili.audio_ecommerce.infra.docs.ApiNotFoundResponse;
+import com.vimevili.audio_ecommerce.services.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products")
@@ -37,21 +44,24 @@ public class ProductController {
         return ResponseEntity.ok(productService.findById(productId));
     }
 
-    @GetMapping("/category/{productCategory}")
-    @Operation(summary = "Return a product collection matching the category")
+    @GetMapping
+    @Operation(summary = "Search and filter products with optional category, search term and sorting")
     @ApiGlobalErrors
     @ApiResponse(responseCode = "200", description = "Products found", 
-    content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProductInfoDTO.class))))
-    public ResponseEntity<Set<ProductInfoDTO>> getProductByCategory(@PathVariable ProductCategory productCategory) {
-        return ResponseEntity.ok(productService.findByCategory(productCategory));
-    }
-
-    @GetMapping("/search")
-    @Operation(summary = "Return a product collection matching the search query")
-    @ApiGlobalErrors
-    @ApiResponse(responseCode = "200", description = "Search results", 
         content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ProductInfoDTO.class))))
-    public ResponseEntity<Set<ProductInfoDTO>> searchProducts(@RequestParam("name") String name) {
-        return ResponseEntity.ok(productService.search(name));
+    public ResponseEntity<Set<ProductInfoDTO>> getProducts(
+            @Parameter(description = "Filter by product category")
+            @RequestParam(required = false) ProductCategory category,
+            
+            @Parameter(description = "Search term to filter products by name")
+            @RequestParam(required = false) String search,
+            
+            @Parameter(description = "Field to sort by (NAME, PRICE, RATING, REVIEWS)")
+            @RequestParam(required = false) ProductSortField sortBy,
+            
+            @Parameter(description = "Sort direction: asc or desc", schema = @Schema(allowableValues = {"asc", "desc"}))
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        return ResponseEntity.ok(productService.findProducts(category, search, sortBy, sortDir));
     }
 }
