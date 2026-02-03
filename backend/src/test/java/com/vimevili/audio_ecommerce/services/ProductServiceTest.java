@@ -8,6 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -22,11 +23,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.vimevili.audio_ecommerce.dtos.product.ProductDetailsDTO;
 import com.vimevili.audio_ecommerce.dtos.product.ProductInfoDTO;
 import com.vimevili.audio_ecommerce.enums.ProductCategory;
 import com.vimevili.audio_ecommerce.enums.ProductSortField;
 import com.vimevili.audio_ecommerce.exceptions.ResourceNotFoundException;
 import com.vimevili.audio_ecommerce.respositories.ProductRepository;
+import com.vimevili.audio_ecommerce.respositories.ReviewRepository;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ProductService Tests")
@@ -34,6 +37,9 @@ class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private ReviewRepository reviewRepository;
 
     @InjectMocks
     private ProductService productService;
@@ -61,17 +67,20 @@ class ProductServiceTest {
     class FindById {
 
         @Test
-        @DisplayName("should return product when found")
+        @DisplayName("should return product with reviews when found")
         void shouldReturnProductWhenFound() {
             when(productRepository.findByIdAsDTO(productId)).thenReturn(Optional.of(mockProduct));
+            when(reviewRepository.findByProductIdAsDTO(productId)).thenReturn(Collections.emptyList());
 
-            ProductInfoDTO result = productService.findById(productId);
+            ProductDetailsDTO result = productService.findById(productId);
 
             assertNotNull(result);
             assertEquals(mockProduct.id(), result.id());
             assertEquals(mockProduct.name(), result.name());
             assertEquals(mockProduct.price(), result.price());
+            assertNotNull(result.reviews());
             verify(productRepository, times(1)).findByIdAsDTO(productId);
+            verify(reviewRepository, times(1)).findByProductIdAsDTO(productId);
         }
 
         @Test

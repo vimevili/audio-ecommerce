@@ -1,4 +1,5 @@
 import type IProduct from '@/interfaces/IProduct';
+import { Link } from '@tanstack/react-router';
 
 interface ProductCardProps {
   product: IProduct;
@@ -6,7 +7,11 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <div className="bg-gray-50 rounded-2xl p-4 hover:shadow-md transition-all cursor-pointer group flex flex-col h-full">
+    <Link
+      to="/product/$id"
+      params={{ id: product.id }}
+      className="bg-gray-50 rounded-2xl p-4 hover:shadow-md transition-all cursor-pointer group flex flex-col h-full"
+    >
       <div className="aspect-square bg-white rounded-xl mb-4 overflow-hidden">
         <img
           src={product.picture}
@@ -26,6 +31,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

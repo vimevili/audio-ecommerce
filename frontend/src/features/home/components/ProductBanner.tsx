@@ -8,6 +8,7 @@ interface IProps extends Partial<IProduct> {
 
 const ProductBanner: React.FC<IProps> = ({
   direction,
+  id,
   name,
   picture,
   price,
@@ -15,7 +16,9 @@ const ProductBanner: React.FC<IProps> = ({
   const isHorizontal = direction === 'horizontal';
 
   return (
-    <div
+    <Link
+      to="/product/$id"
+      params={{ id: id! }}
       className={`bg-white rounded-2xl shadow-sm hover:shadow-md transition-all cursor-pointer w-full h-full flex overflow-hidden p-4 ${
         isHorizontal ? 'flex-row items-center gap-1' : 'flex-col group gap-4'
       }`}
@@ -44,13 +47,10 @@ const ProductBanner: React.FC<IProps> = ({
         </div>
 
         {isHorizontal && (
-          <Link
-            to={'/'}
-            className="flex items-center text-[#0ACF83] text-sm font-bold gap-2 mt-auto"
-          >
+          <div className="flex items-center text-[#0ACF83] text-sm font-bold gap-2 mt-auto">
             Shop now
             <ArrowRight className="w-4 h-4" />
-          </Link>
+          </div>
         )}
       </div>
 
@@ -67,7 +67,7 @@ const ProductBanner: React.FC<IProps> = ({
           className="w-full h-full object-cover object-center"
         />
       </div>
-    </div>
+    </Link>
   );
 };
 

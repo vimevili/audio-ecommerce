@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import ProductCard from './ProductCard';
 import type IProduct from '@/interfaces/IProduct';
+import { renderWithRouter } from '@/test/utils';
 
 describe('ProductCard', () => {
   const mockProduct: IProduct = {
@@ -16,25 +17,25 @@ describe('ProductCard', () => {
   };
 
   it('should render product name', () => {
-    render(<ProductCard product={mockProduct} />);
+    renderWithRouter(<ProductCard product={mockProduct} />);
 
     expect(screen.getByText('Premium Wireless Headphone')).toBeInTheDocument();
   });
 
   it('should render product price with USD prefix', () => {
-    render(<ProductCard product={mockProduct} />);
+    renderWithRouter(<ProductCard product={mockProduct} />);
 
     expect(screen.getByText('USD 299.99')).toBeInTheDocument();
   });
 
   it('should render product rating with one decimal', () => {
-    render(<ProductCard product={mockProduct} />);
+    renderWithRouter(<ProductCard product={mockProduct} />);
 
     expect(screen.getByText('4.5')).toBeInTheDocument();
   });
 
   it('should render product image with correct alt text', () => {
-    render(<ProductCard product={mockProduct} />);
+    renderWithRouter(<ProductCard product={mockProduct} />);
 
     const image = screen.getByAltText('Premium Wireless Headphone');
     expect(image).toBeInTheDocument();
@@ -43,7 +44,7 @@ describe('ProductCard', () => {
 
   it('should handle product with zero rating', () => {
     const zeroRatingProduct = { ...mockProduct, averageRating: 0 };
-    render(<ProductCard product={zeroRatingProduct} />);
+    renderWithRouter(<ProductCard product={zeroRatingProduct} />);
 
     expect(screen.getByText('0.0')).toBeInTheDocument();
   });
@@ -53,9 +54,24 @@ describe('ProductCard', () => {
       ...mockProduct,
       name: 'This is a very long product name that should be clamped to two lines',
     };
-    render(<ProductCard product={longNameProduct} />);
+    renderWithRouter(<ProductCard product={longNameProduct} />);
 
     const nameElement = screen.getByText(longNameProduct.name);
     expect(nameElement).toHaveClass('line-clamp-2');
+  });
+
+  it('should have link to product page with correct params', () => {
+    renderWithRouter(<ProductCard product={mockProduct} />);
+
+    const link = screen.getByRole('link');
+    expect(link).toHaveAttribute('href', '/product/1');
+  });
+
+  it('should be clickable (wrapped in Link)', () => {
+    renderWithRouter(<ProductCard product={mockProduct} />);
+
+    const link = screen.getByRole('link');
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveClass('cursor-pointer');
   });
 });

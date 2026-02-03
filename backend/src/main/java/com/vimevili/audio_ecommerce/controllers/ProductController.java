@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vimevili.audio_ecommerce.dtos.product.ProductDetailsDTO;
 import com.vimevili.audio_ecommerce.dtos.product.ProductInfoDTO;
 import com.vimevili.audio_ecommerce.enums.ProductCategory;
 import com.vimevili.audio_ecommerce.enums.ProductSortField;
@@ -35,12 +36,12 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/id/{productId}")
-    @Operation(summary = "Return a product matching the ID")
+    @Operation(summary = "Return a product matching the ID with its reviews")
     @ApiGlobalErrors      
     @ApiNotFoundResponse  
     @ApiResponse(responseCode = "200", description = "Product found", 
-        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductInfoDTO.class)))
-    public ResponseEntity<ProductInfoDTO> getProductById(@PathVariable UUID productId) {
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductDetailsDTO.class)))
+    public ResponseEntity<ProductDetailsDTO> getProductById(@PathVariable UUID productId) {
         return ResponseEntity.ok(productService.findById(productId));
     }
 
