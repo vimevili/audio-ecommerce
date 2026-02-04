@@ -4,7 +4,11 @@ import com.vimevili.audio_ecommerce.enums.UserRole;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.UUID;
+
 public record UserResponseDTO( 
+    @Schema(description = "ID of the user")
+    UUID id,
     @Schema(description = "Name of the user", example = "John Doe")
     String name,
     @Schema(description = "Picture of the user")

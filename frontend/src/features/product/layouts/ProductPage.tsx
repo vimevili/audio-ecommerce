@@ -1,19 +1,22 @@
-import useGetProduct from '@/hooks/queries/useGetProduct';
+import { LoadingOverlay } from '@/components';
 import { Navbar } from '@/features/home/components';
-import { useNavigate, useParams } from '@tanstack/react-router';
-import { ArrowLeft, Star } from 'lucide-react';
+import useGetProduct from '@/hooks/queries/useGetProduct';
+import { useCartStore } from '@/store';
+import { Link, useNavigate, useParams } from '@tanstack/react-router';
+import { ArrowLeft, ShoppingCart, Star } from 'lucide-react';
+import { AddToCartBar } from '../components';
 import ProductImage from '../components/ProductImage';
 import ProductInfo from '../components/ProductInfo';
 import ProductReviews from '../components/ProductReviews';
-import { AddToCartBar } from '../components';
 
 export default function ProductPage() {
   const { id } = useParams({ from: '/product/$id' });
   const navigate = useNavigate();
   const { data: product, isLoading, isError } = useGetProduct(id);
+  const totalItems = useCartStore((state) => state.getTotalItems());
 
   if (isLoading) {
-    return <ProductPageSkeleton />;
+    return <LoadingOverlay />;
   }
 
   if (isError || !product) {
@@ -70,9 +73,9 @@ export default function ProductPage() {
       <div className="min-h-screen bg-white pb-28 lg:hidden">
         {/* Mobile Header */}
         <header className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm">
-          <div className="flex items-center gap-4 p-6">
+          <div className="flex items-center gap-4 responsive-padding-x py-4">
             <button
-              onClick={() => navigate({ to: '/' })}
+              onClick={() => window.history.back()}
               className="rounded-full p-2 transition-colors hover:bg-neutral-100"
               aria-label="Go back"
             >
@@ -86,11 +89,23 @@ export default function ProductPage() {
                 USD {product.price.toFixed(2)}
               </p>
             </div>
+            <Link
+              to="/cart"
+              className="relative rounded-full p-2 transition-colors hover:bg-neutral-100"
+              aria-label="Go to cart"
+            >
+              <ShoppingCart className="size-6 text-neutral-900" />
+              {totalItems > 0 && (
+                <span className="absolute top-0 right-0 flex size-5 items-center justify-center rounded-full bg-audio-green text-xs font-bold text-white">
+                  {totalItems}
+                </span>
+              )}
+            </Link>
           </div>
         </header>
 
         {/* Mobile Content */}
-        <main className="p-6 pt-0">
+        <main className="responsive-padding pt-0">
           <ProductImage src={product.picture} alt={product.name} />
           <ProductInfo product={product} />
           <ProductReviews
@@ -101,7 +116,12 @@ export default function ProductPage() {
         </main>
 
         {/* Fixed Bottom Bar */}
-        <AddToCartBar productId={product.id} price={product.price} />
+        <AddToCartBar
+          productId={product.id}
+          productName={product.name}
+          productPicture={product.picture}
+          price={product.price}
+        />
       </div>
 
       {/* Desktop Layout */}
@@ -149,6 +169,8 @@ export default function ProductPage() {
                   <div className="mt-8">
                     <AddToCartBar
                       productId={product.id}
+                      productName={product.name}
+                      productPicture={product.picture}
                       price={product.price}
                       isDesktop
                     />
@@ -167,29 +189,5 @@ export default function ProductPage() {
         </div>
       </div>
     </>
-  );
-}
-
-function ProductPageSkeleton() {
-  return (
-    <div className="min-h-screen animate-pulse bg-white pb-28">
-      <header className="p-6">
-        <div className="flex items-center gap-4">
-          <div className="size-10 rounded-full bg-neutral-200" />
-          <div className="flex-1">
-            <div className="mb-2 h-5 w-3/4 rounded bg-neutral-200" />
-            <div className="h-6 w-24 rounded bg-neutral-200" />
-          </div>
-        </div>
-      </header>
-      <div className="p-6 pt-0">
-        <div className="aspect-square w-full rounded-2xl bg-neutral-200" />
-        <div className="mt-6 space-y-3">
-          <div className="h-4 w-full rounded bg-neutral-200" />
-          <div className="h-4 w-5/6 rounded bg-neutral-200" />
-          <div className="h-4 w-4/6 rounded bg-neutral-200" />
-        </div>
-      </div>
-    </div>
   );
 }

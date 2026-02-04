@@ -112,7 +112,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         UserModel user = (UserModel) auth.getPrincipal();
-        return ResponseEntity.ok(new UserResponseDTO(user.getName(), user.getPicture(), user.getUsername(), user.getEmail(), user.getRole()));
+        return ResponseEntity.ok(new UserResponseDTO(user.getId(), user.getName(), user.getPicture(), user.getUsername(), user.getEmail(), user.getRole()));
     }
 
     @PostMapping("/logout")

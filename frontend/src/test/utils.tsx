@@ -4,6 +4,7 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
+  Outlet,
   RouterProvider,
 } from '@tanstack/react-router';
 import { render, type RenderOptions } from '@testing-library/react';
@@ -35,20 +36,37 @@ export function createWrapper() {
 
 export function createTestRouter(component: ReactElement) {
   const rootRoute = createRootRoute({
-    component: () => component,
+    component: () => (
+      <>
+        {component}
+        <Outlet />
+      </>
+    ),
   });
 
   const indexRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: '/',
+    component: () => null,
   });
 
   const productRoute = createRoute({
     getParentRoute: () => rootRoute,
     path: '/product/$id',
+    component: () => null,
   });
 
-  const routeTree = rootRoute.addChildren([indexRoute, productRoute]);
+  const cartRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/cart',
+    component: () => null,
+  });
+
+  const routeTree = rootRoute.addChildren([
+    indexRoute,
+    productRoute,
+    cartRoute,
+  ]);
 
   const router = createRouter({
     routeTree,
@@ -58,19 +76,23 @@ export function createTestRouter(component: ReactElement) {
   return router;
 }
 
-export function renderWithRouter(
+export async function renderWithRouter(
   ui: ReactElement,
   options?: Omit<RenderOptions, 'wrapper'>,
 ) {
   const queryClient = createTestQueryClient();
   const router = createTestRouter(ui);
 
-  return render(
+  await router.load();
+
+  const result = render(
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider>,
     options,
   );
+
+  return result;
 }
 
 export function renderWithProviders(

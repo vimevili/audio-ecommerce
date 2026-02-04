@@ -12,7 +12,7 @@ export const Carousel = (props: PropType) => {
   const [emblaRef] = useEmblaCarousel(options);
 
   return (
-    <div className="overflow-hidden w-full h-full" ref={emblaRef}>
+    <div className="overflow-x-clip w-full h-full" ref={emblaRef}>
       <div className="flex gap-4 touch-pan-y h-full">{children}</div>
     </div>
   );

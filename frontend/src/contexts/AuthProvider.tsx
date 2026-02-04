@@ -1,10 +1,13 @@
 import { authService } from '@/features/auth/services/authService';
+import { useCartStore } from '@/store';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { AuthContext } from '../hooks/useAuth';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
+  const initializeCart = useCartStore((state) => state.initializeCart);
+  const clearCart = useCartStore((state) => state.clearCart);
 
   const {
     data: user,
@@ -18,8 +21,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refetchOnWindowFocus: false,
   });
 
+  // Initialize cart when user is authenticated
+  useEffect(() => {
+    if (user?.id) {
+      initializeCart(user.id);
+    }
+  }, [user?.id, initializeCart]);
+
   const logout = async () => {
     await authService.logout();
+    clearCart();
     queryClient.setQueryData(['authUser'], null);
     queryClient.clear();
   };

@@ -16,59 +16,59 @@ describe('ProductCard', () => {
     totalReviews: 120,
   };
 
-  it('should render product name', () => {
-    renderWithRouter(<ProductCard product={mockProduct} />);
+  it('should render product name', async () => {
+    await renderWithRouter(<ProductCard product={mockProduct} />);
 
     expect(screen.getByText('Premium Wireless Headphone')).toBeInTheDocument();
   });
 
-  it('should render product price with USD prefix', () => {
-    renderWithRouter(<ProductCard product={mockProduct} />);
+  it('should render product price with USD prefix', async () => {
+    await renderWithRouter(<ProductCard product={mockProduct} />);
 
     expect(screen.getByText('USD 299.99')).toBeInTheDocument();
   });
 
-  it('should render product rating with one decimal', () => {
-    renderWithRouter(<ProductCard product={mockProduct} />);
+  it('should render product rating with one decimal', async () => {
+    await renderWithRouter(<ProductCard product={mockProduct} />);
 
     expect(screen.getByText('4.5')).toBeInTheDocument();
   });
 
-  it('should render product image with correct alt text', () => {
-    renderWithRouter(<ProductCard product={mockProduct} />);
+  it('should render product image with correct alt text', async () => {
+    await renderWithRouter(<ProductCard product={mockProduct} />);
 
     const image = screen.getByAltText('Premium Wireless Headphone');
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', 'https://example.com/headphone.jpg');
   });
 
-  it('should handle product with zero rating', () => {
+  it('should handle product with zero rating', async () => {
     const zeroRatingProduct = { ...mockProduct, averageRating: 0 };
-    renderWithRouter(<ProductCard product={zeroRatingProduct} />);
+    await renderWithRouter(<ProductCard product={zeroRatingProduct} />);
 
     expect(screen.getByText('0.0')).toBeInTheDocument();
   });
 
-  it('should handle product with long name (line clamp)', () => {
+  it('should handle product with long name (line clamp)', async () => {
     const longNameProduct = {
       ...mockProduct,
       name: 'This is a very long product name that should be clamped to two lines',
     };
-    renderWithRouter(<ProductCard product={longNameProduct} />);
+    await renderWithRouter(<ProductCard product={longNameProduct} />);
 
     const nameElement = screen.getByText(longNameProduct.name);
     expect(nameElement).toHaveClass('line-clamp-2');
   });
 
-  it('should have link to product page with correct params', () => {
-    renderWithRouter(<ProductCard product={mockProduct} />);
+  it('should have link to product page with correct params', async () => {
+    await renderWithRouter(<ProductCard product={mockProduct} />);
 
     const link = screen.getByRole('link');
     expect(link).toHaveAttribute('href', '/product/1');
   });
 
-  it('should be clickable (wrapped in Link)', () => {
-    renderWithRouter(<ProductCard product={mockProduct} />);
+  it('should be clickable (wrapped in Link)', async () => {
+    await renderWithRouter(<ProductCard product={mockProduct} />);
 
     const link = screen.getByRole('link');
     expect(link).toBeInTheDocument();

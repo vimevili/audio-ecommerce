@@ -1,19 +1,30 @@
+import { useAuth } from '@/hooks';
+import { useCartStore } from '@/store';
+import { useNavigate } from '@tanstack/react-router';
 import { Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface AddToCartBarProps {
   productId: string;
+  productName: string;
+  productPicture: string;
   price: number;
   isDesktop?: boolean;
 }
 
 export default function AddToCartBar({
   productId,
+  productName,
+  productPicture,
   price,
   isDesktop = false,
 }: AddToCartBarProps) {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
+  const addItem = useCartStore((state) => state.addItem);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const handleDecrement = () => {
     if (quantity > 1) {
@@ -26,11 +37,29 @@ export default function AddToCartBar({
   };
 
   const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      navigate({ to: '/sign-in' });
+      return;
+    }
+
     setIsAdding(true);
-    console.log('Adding product to cart:', productId, 'quantity:', quantity);
+    addItem(
+      {
+        id: productId,
+        name: productName,
+        picture: productPicture,
+        price,
+      },
+      quantity,
+    );
+
+    toast.success(
+      `${quantity > 1 ? `${quantity}x ` : ''}${productName} added to cart`,
+    );
 
     setTimeout(() => {
       setIsAdding(false);
+      setQuantity(1);
     }, 500);
   };
 
@@ -74,7 +103,7 @@ export default function AddToCartBar({
   }
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-20 border-t border-neutral-200 bg-white px-6 py-4">
+    <div className="fixed inset-x-0 bottom-0 z-20 border-t border-neutral-200 bg-white responsive-padding-x py-4">
       <div className="flex items-center gap-4">
         <div className="h-full flex flex-col gap-1">
           <div className="flex items-center gap-1">

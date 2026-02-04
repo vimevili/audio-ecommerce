@@ -1,17 +1,20 @@
 import { AvatarMenu } from '@/components';
 import { logoSvg } from '@/assets';
+import { useCartStore } from '@/store';
+import { Link } from '@tanstack/react-router';
 import { ShoppingCart } from 'lucide-react';
 import { MobileMenu, SearchBar } from './';
-import { Link } from '@tanstack/react-router';
 
 interface NavbarProps {
   layout: 'mobile' | 'desktop';
 }
 
 export default function Navbar({ layout }: NavbarProps) {
+  const totalItems = useCartStore((state) => state.getTotalItems());
+
   if (layout === 'mobile') {
     return (
-      <nav className="w-full flex justify-between items-center p-6 pb-0 sm:p-12 sm:pb-0">
+      <nav className="w-full flex justify-between items-center responsive-padding-x pt-6">
         <MobileMenu />
         <AvatarMenu />
       </nav>
@@ -32,10 +35,17 @@ export default function Navbar({ layout }: NavbarProps) {
         </div>
 
         <div className="flex items-center gap-6 shrink-0">
-          <button className="flex items-center gap-2 hover:text-audio-green transition-colors">
+          <Link
+            to="/cart"
+            className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          >
             <ShoppingCart size={22} className="text-gray-700" />
-            <span className="text-gray-700 text-sm font-medium">Cart</span>
-          </button>
+            {totalItems > 0 && (
+              <span className="absolute top-0 right-0 flex size-5 items-center justify-center rounded-full bg-audio-green text-xs font-bold text-white">
+                {totalItems}
+              </span>
+            )}
+          </Link>
           <AvatarMenu />
         </div>
       </div>
