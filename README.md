@@ -38,19 +38,59 @@ O projeto está em desenvolvimento ativo, com funcionalidades principais impleme
 
 #### Página Inicial (Desktop)
 
-![Home Desktop](https://via.placeholder.com/800x400?text=Home+Desktop)
+![Home Desktop](screenshots/home-desktop.png)
 
 #### Página Inicial (Mobile)
 
-![Home Mobile](https://via.placeholder.com/400x600?text=Home+Mobile)
+![Home Mobile](screenshots/home-mobile.png)
 
-#### Página do Produto
+#### Página do Produto (Desktop)
 
-![Product Page](https://via.placeholder.com/800x400?text=Product+Page)
+![Product Page Desktop](screenshots/product-desktop.png)
 
-#### Carrinho
+#### Página do Produto (Mobile)
 
-![Cart](https://via.placeholder.com/800x400?text=Cart)
+![Product Page Mobile](screenshots/product-mobile.png)
+
+#### Carrinho (Desktop)
+
+![Cart](screenshots/cart-desktop.png)
+
+#### Carrinho (Mobile)
+
+![Cart](screenshots/cart-mobile.png)
+
+#### Sign-In (Desktop)
+
+![Cart](screenshots/sign-in-desktop.png)
+
+#### Sign-In (Mobile)
+
+![Cart](screenshots/sign-in-mobile.png)
+
+#### Sign-Up (Desktop)
+
+![Cart](screenshots/sign-up-desktop.png)
+
+#### Sign-Up (Mobile)
+
+![Cart](screenshots/sign-up-mobile.png)
+
+#### Forgot My Password (Desktop)
+
+![Cart](screenshots/forgot-desktop.png)
+
+#### Forgot My Password (Mobile)
+
+![Cart](screenshots/forgot-mobile.png)
+
+#### Not Found (Desktop)
+
+![Cart](screenshots/404-desktop.png)
+
+#### Not Found (Mobile)
+
+![Cart](screenshots/404-mobile.png)
 
 ## 📋 Pré-requisitos
 
