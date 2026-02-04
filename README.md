@@ -126,6 +126,34 @@ Antes de começar, você vai precisar ter instalado em sua máquina as seguintes
    ```
 
    O servidor estará rodando em `http://localhost:8080`
+   docker compose up --build
+
+### Rodando com Docker Compose
+
+O projeto está totalmente containerizado, facilitando o setup do ambiente de desenvolvimento. Seguindo as melhores práticas de segurança, as credenciais sensíveis são gerenciadas via variáveis de ambiente.
+
+#### Passos para execução:
+
+1. **Gerenciamento de Segredos:**
+   O backend espera um arquivo `.env` para carregar as credenciais. Use o modelo disponível:
+
+   ```bash
+   cp backend/.env.example backend/.env
+   ```
+
+   Certifique-se de preencher o arquivo `.env` com suas chaves reais. Este arquivo é ignorado pelo Git para evitar o vazamento de segredos.
+
+2. **Subir a Infraestrutura:**
+   Na raiz do projeto, execute o comando para construir a imagem e subir os containers:
+   ```bash
+   docker-compose up --build
+   ```
+
+🛡️ **Nota Técnica sobre Conectividade:**
+Para garantir a estabilidade em ambientes de desenvolvimento e contornar restrições comuns de redes residenciais (bloqueios de portas padrão), o projeto utiliza o Transaction Pooler do Supabase (porta 6543). Essa configuração permite que o container atravesse firewalls locais e mantenha uma conexão resiliente com o banco de dados na nuvem.
+
+**Segurança em Produção:**
+Para ambientes de produção (como AWS), os segredos devem ser migrados para serviços gerenciados como AWS Secrets Manager ou Vault. Nunca armazene segredos em texto puro no histórico do repositório.
 
 ### Front-End
 
