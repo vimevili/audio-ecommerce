@@ -1,17 +1,11 @@
-import { Route } from '@/routes/index';
+import { useCartStore } from '@/store';
+import { useNavigate } from '@tanstack/react-router';
+import { Menu, ShoppingCart } from 'lucide-react';
 import { DropdownMenu } from 'radix-ui';
-import { Menu, ShoppingCart, Headphones, Gamepad2 } from 'lucide-react';
 
 export default function MobileMenu() {
-  const navigate = Route.useNavigate();
-
-  const handleNavigate = (category?: 'HEADPHONES' | 'HEADSETS') => {
-    navigate({
-      to: '.',
-      search: category ? { category } : {},
-      replace: true,
-    });
-  };
+  const navigate = useNavigate();
+  const totalItems = useCartStore((state) => state.getTotalItems());
 
   return (
     <DropdownMenu.Root>
@@ -28,25 +22,17 @@ export default function MobileMenu() {
           sideOffset={8}
         >
           <DropdownMenu.Item
-            onClick={() => handleNavigate('HEADPHONES')}
+            onClick={() => navigate({ to: '/cart' })}
             className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 outline-none cursor-pointer hover:bg-gray-50 rounded-sm"
           >
-            <Headphones className="w-4 h-4 text-audio-green" />
-            Headphones
-          </DropdownMenu.Item>
-
-          <DropdownMenu.Item
-            onClick={() => handleNavigate('HEADSETS')}
-            className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 outline-none cursor-pointer hover:bg-gray-50 rounded-sm"
-          >
-            <Gamepad2 className="w-4 h-4 text-audio-green" />
-            Headsets
-          </DropdownMenu.Item>
-
-          <DropdownMenu.Separator className="h-px bg-gray-200 my-1" />
-
-          <DropdownMenu.Item className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 outline-none cursor-pointer hover:bg-gray-50 rounded-sm">
-            <ShoppingCart className="w-4 h-4 text-audio-green" />
+            <div className="relative">
+              <ShoppingCart className="w-4 h-4 text-audio-green" />
+              {totalItems > 0 && (
+                <span className="absolute -top-2 -right-2 flex size-4 items-center justify-center rounded-full bg-audio-green text-[10px] font-bold text-white">
+                  {totalItems}
+                </span>
+              )}
+            </div>
             Cart
           </DropdownMenu.Item>
         </DropdownMenu.Content>

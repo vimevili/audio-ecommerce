@@ -24,27 +24,27 @@ const ProductBanner: React.FC<IProps> = ({
       }`}
     >
       <div
-        className={`flex flex-col justify-between h-full ${
-          isHorizontal ? 'flex-[0_0_55%] items-start' : 'order-2 flex-1'
+        className={`flex flex-col h-full ${
+          isHorizontal
+            ? 'flex-[0_0_55%] items-start justify-between'
+            : 'order-2 flex-1 justify-between'
         }`}
       >
-        <div className="flex flex-col gap-2">
-          <h2
-            className={`text-gray-900 font-bold leading-tight text-start ${
-              isHorizontal
-                ? 'text-lg md:text-xl'
-                : 'text-sm font-normal line-clamp-2'
-            }`}
-          >
-            {name}
-          </h2>
+        <h2
+          className={`text-gray-900 font-bold leading-tight text-start ${
+            isHorizontal
+              ? 'text-lg md:text-xl'
+              : 'text-sm font-normal line-clamp-2'
+          }`}
+        >
+          {name}
+        </h2>
 
-          {!isHorizontal && (
-            <span className="text-gray-900 text-sm font-bold text-start">
-              USD {price}
-            </span>
-          )}
-        </div>
+        {!isHorizontal && (
+          <span className="text-gray-900 text-sm font-bold text-start">
+            USD {price}
+          </span>
+        )}
 
         {isHorizontal && (
           <div className="flex items-center text-[#0ACF83] text-sm font-bold gap-2 mt-auto">
