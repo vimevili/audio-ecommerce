@@ -1,18 +1,36 @@
 package com.vimevili.audio_ecommerce.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-
 import java.io.Serial;
-import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vimevili.audio_ecommerce.enums.UserRole;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "users")
-public class UserModel implements Serializable {
+public class UserModel implements UserDetails {
 
     @Serial
     private static final long serialVersionUID = -5261257122332581559L;
@@ -24,8 +42,23 @@ public class UserModel implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String picture;
+
+    @Column(nullable = false, unique = true, columnDefinition = "TEXT")
+    private String username;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String password;
+
+    @Column(nullable = false,  unique = true, columnDefinition = "TEXT")
+    private String email;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
+    @Column(nullable = false)
+    private boolean enabled; 
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -33,13 +66,47 @@ public class UserModel implements Serializable {
 
     protected UserModel() {}
 
-    public UserModel(String name) {
-        this.name = name;
+
+    public UserModel(String name, String username, String password, String email, UserRole role) {
+    this.name = name;
+    this.username = username;
+    this.password = password;
+    this.email = email;
+    this.role = role; 
+    this.enabled = false; 
+}
+
+public UserModel(String name, String picture, String username, String password, String email, UserRole role) {
+    this.name = name;
+    this.picture = picture;
+    this.username = username;
+    this.password = password;
+    this.email = email;
+    this.role = role;
+    this.enabled = false;
+}
+
+    public UserRole getRole() {
+        return role;
     }
 
-    public UserModel(String name, String picture) {
-        this.name = name;
-        this.picture = picture;
+    public void setRole(String role) {
+        this.role = UserRole.valueOf(role.toUpperCase());
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public UUID getId() {
@@ -60,6 +127,15 @@ public class UserModel implements Serializable {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+    
+    @Override
+    public boolean isEnabled() {
+        return this.enabled; 
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
@@ -100,5 +176,21 @@ public class UserModel implements Serializable {
                 .orElseThrow(() -> new RuntimeException("Review " + id + " not found!"));
         reviewForUpdate.updateRate(rate);
         reviewForUpdate.updateContent(comment);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == UserRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
     }
 }

@@ -12,7 +12,7 @@ import java.util.UUID;
 public class ReviewModel implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 7946443097788371619L;
+    private static final long serialVersionUID = -1894336559531043717L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,17 +28,27 @@ public class ReviewModel implements Serializable {
     @JoinColumn(name = "user_id")
     private UserModel user;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private ProductModel product;
+
     protected ReviewModel() {   }
 
-    public ReviewModel(Float rate, String content, UserModel user) {
+    public ReviewModel(Float rate, String content, UserModel user, ProductModel product) {
         this.rate = rate;
         this.user = user;
         this.content = content;
+        this.product = product;
     }
 
-    public ReviewModel(Float rate, UserModel user) {
+    public ReviewModel(Float rate, UserModel user, ProductModel product) {
         this.rate = rate;
         this.user = user;
+        this.product = product;
+    }
+
+    public ProductModel getProduct() {
+        return product;
     }
 
     public UUID getId() {
