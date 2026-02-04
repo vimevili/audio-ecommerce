@@ -1,7 +1,12 @@
 spring:
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}
 
 app:
   security:
     cookie-name: auth_token
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:bananas-for-secret-key}
