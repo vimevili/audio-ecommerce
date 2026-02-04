@@ -53,6 +53,14 @@ public class CartController {
         return ResponseEntity.ok(cartService.findByUserId(userId));
     }
 
+    @PostMapping("/get-or-create/{userId}")
+    @Operation(summary = "Get existing cart or create a new one for user")
+    @ApiResponse(responseCode = "200", description = "Cart found or created", 
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = CartInfoDTO.class)))
+    public ResponseEntity<CartInfoDTO> getOrCreateCart(@PathVariable String userId) {
+        return ResponseEntity.ok(cartService.getOrCreateCart(userId));
+    }
+
     @PostMapping("/add")
     @Operation(summary = "Add a product to the cart")
     @ApiNotFoundResponse
@@ -62,6 +70,15 @@ public class CartController {
         return ResponseEntity.ok(cartService.addToCart(cartData));
     }
 
+    @PostMapping("/decrement")
+    @Operation(summary = "Decrement product quantity in the cart")
+    @ApiNotFoundResponse
+    @ApiResponse(responseCode = "200", description = "Item quantity decremented successfully", 
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ChangeItemInfoDTO.class)))
+    public ResponseEntity<ChangeItemInfoDTO> decrementItem(@RequestBody ChangeItemRequestDTO cartData) {
+        return ResponseEntity.ok(cartService.decrementItem(cartData));
+    }
+
     @DeleteMapping("/delete")
     @Operation(summary = "Remove a product from the cart")
     @ApiNotFoundResponse
@@ -69,5 +86,14 @@ public class CartController {
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ChangeItemInfoDTO.class)))
     public ResponseEntity<ChangeItemInfoDTO> deleteFromCart(@RequestBody ChangeItemRequestDTO cartData) {
         return ResponseEntity.ok(cartService.removeFromCart(cartData));
+    }
+
+    @DeleteMapping("/clear/{cartId}")
+    @Operation(summary = "Clear all items from the cart")
+    @ApiNotFoundResponse
+    @ApiResponse(responseCode = "200", description = "Cart cleared successfully", 
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ChangeItemInfoDTO.class)))
+    public ResponseEntity<ChangeItemInfoDTO> clearCart(@PathVariable String cartId) {
+        return ResponseEntity.ok(cartService.clearCart(cartId));
     }
 }

@@ -65,14 +65,28 @@ public class CartModel implements Serializable {
     }
 
     public CartModel addProducts(Set<CartItemModel> newItems) {
-        newItems.forEach(item -> item.setCart(this));
-        this.products.addAll(newItems);
+        for (CartItemModel newItem : newItems) {
+            // Check if product already exists in cart
+            CartItemModel existingItem = this.products.stream()
+                    .filter(item -> item.getProduct().getId().equals(newItem.getProduct().getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existingItem != null) {
+                // Update quantity of existing item
+                existingItem.setQuantity(existingItem.getQuantity() + newItem.getQuantity());
+            } else {
+                // Add new item
+                newItem.setCart(this);
+                this.products.add(newItem);
+            }
+        }
         this.calculateTotal();
         return this;
     }
 
     public void removeProducts(UUID product_id) {
-        this.products.removeIf(product -> product.getId().equals(product_id));
+        this.products.removeIf(item -> item.getProduct().getId().equals(product_id));
     }
 
     public void emptyCart() {
