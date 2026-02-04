@@ -23,6 +23,7 @@ describe('cartStore', () => {
 
   const mockCartResponse = {
     id: 'cart-123',
+    totalCartValue: 99.99,
     products: [
       {
         productId: 'product-1',
@@ -30,6 +31,7 @@ describe('cartStore', () => {
         productPicture: 'https://example.com/image.jpg',
         unitPrice: 99.99,
         quantity: 1,
+        totalPrice: 99.99,
       },
     ],
   };
