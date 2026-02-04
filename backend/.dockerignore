@@ -1,0 +1,11 @@
+target/
+.mvn/
+.git/
+node_modules/
+*.log
+*.tmp
+*.swp
+*.iml
+/.idea/
+docker-compose.yml
+Dockerfile
