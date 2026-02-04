@@ -1,7 +1,18 @@
 app:
   url:
-    frontend: https://site.com
-    backend: https://api.site.com
+    frontend: https://audio-app-ecommerce.vercel.app
+    backend: https://audio-ecommerce.onrender.com/
   security:
     cookie-secure: true
     same-site: None
+
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+    driver-class-name: org.postgresql.Driver
+jpa:
+  hibernate:
+    ddl-auto: update
+  show-sql: false
