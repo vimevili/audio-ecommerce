@@ -20,6 +20,15 @@
   .page-container {
     @apply min-h-screen w-full flex flex-col justify-between;
   }
+  .responsive-padding {
+    @apply p-6 sm:px-12 md:px-6;
+  }
+  .responsive-padding-x {
+    @apply px-6 sm:px-12 md:px-6;
+  }
+  .responsive-padding-y {
+    @apply py-6 sm:py-12 md:py-8;
+  }
 }
 
 @layer text {
@@ -38,7 +47,6 @@
 }
 
 #root {
-  /* max-width: 1280px; */
   height: 100vh;
   margin: 0 auto;
   font-family: 'DM Sans', sans-serif;
@@ -47,7 +55,6 @@
   text-align: center;
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -67,7 +74,6 @@
   background: #09b874;
 }
 
-/* Firefox */
 * {
   scrollbar-width: thin;
   scrollbar-color: #0acf83 #f1f1f1;

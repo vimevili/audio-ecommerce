@@ -1,5 +1,6 @@
 export { default as AvatarMenu } from './AvatarMenu';
 export { default as Button } from './Button';
+export { default as ConfirmDialog } from './ConfirmDialog';
 export { default as LoadingOverlay } from './LoadingOverlay';
 export { default as PasswordInput } from './PasswordInput';
 export { default as TextInput } from './TextInput';
