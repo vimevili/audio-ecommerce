@@ -5,7 +5,7 @@ interface NoResultsProps {
 
 export default function NoResults({ isSearching, searchTerm }: NoResultsProps) {
   return (
-    <div className="h-full w-screen flex flex-col items-center justify-center text-center gap-4">
+    <div className="h-full w-full md:w-screen flex flex-col items-center justify-center text-center gap-4">
       <div className="text-6xl">🔍</div>
       <h3 className="text-lg font-medium text-gray-900">
         {isSearching ? 'No results found' : 'No products available'}
