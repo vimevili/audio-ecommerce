@@ -129,12 +129,17 @@ public class AuthService implements UserDetailsService {
             data.email(), 
             data.role()
         );
+
+        // For portfolio, accounts are enabled immediately
+        newUser.setEnabled(true);
+
         userRepository.save(newUser);
 
-        VerificationToken vToken = new VerificationToken(newUser);
-        tokenRepository.save(vToken);
+        // For production environment, uncomment the lines below to enable email verification
+        // VerificationToken vToken = new VerificationToken(newUser);
+        // tokenRepository.save(vToken);
 
-        emailService.sendVerificationEmail(newUser, vToken.getToken());
+        // emailService.sendVerificationEmail(newUser, vToken.getToken());
     }
 
     @Transactional
