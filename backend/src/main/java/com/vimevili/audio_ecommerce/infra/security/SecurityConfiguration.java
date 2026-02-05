@@ -1,3 +1,4 @@
+
 package com.vimevili.audio_ecommerce.infra.security;
 
 import java.util.Arrays;
@@ -29,25 +30,25 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return  httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/auth/confirm").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/forgot-password").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/reset-password").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/auth/me").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/resend-confirmation").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/users/check-username").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/users/check-email").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auth/confirm").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/forgot-password").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/reset-password").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auth/me").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/resend-confirmation").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/check-username").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/check-email").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/product").hasRole("ADMIN")
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
 
     @Bean

@@ -47,12 +47,12 @@ public class SecurityFilter extends OncePerRequestFilter {
 }
 
     private String recoverToken(HttpServletRequest request) {
-    if (request.getCookies() == null) return null;
+        if (request.getCookies() == null) return null;
 
-    return Arrays.stream(request.getCookies())
-            .filter(cookie -> "auth_token".equals(cookie.getName()))
-            .findFirst()
-            .map(Cookie::getValue)
-            .orElse(null);
-}
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> "auth_token".equals(cookie.getName()))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElse(null);
+    }
 }
