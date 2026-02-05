@@ -21,7 +21,7 @@ spring:
 
 app:
   email:
-    from: ${APP_EMAIL_FROM:no-reply@audioapp.com}
+    from: ${APP_EMAIL_FROM:demomailtrap.co}
   url:
     frontend: http://localhost:5173
     backend: http://localhost:8080
