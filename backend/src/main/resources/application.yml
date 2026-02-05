@@ -5,6 +5,10 @@ spring:
 app:
   security:
     cookie-name: auth_token
+    cookie-secure: ${COOKIE_SECURE:false}
+    same-site: ${COOKIE_SAMESITE:Lax}
+    cookie-secure: ${COOKIE_SECURE:true}
+    same-site: ${COOKIE_SAMESITE:None}
 
 api:
   security:
