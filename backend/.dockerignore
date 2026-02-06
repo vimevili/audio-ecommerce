@@ -9,3 +9,4 @@ node_modules/
 /.idea/
 docker-compose.yml
 Dockerfile
+backend/src/main/resources/application.yml
