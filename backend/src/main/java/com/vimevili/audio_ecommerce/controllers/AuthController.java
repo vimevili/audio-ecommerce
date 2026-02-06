@@ -43,9 +43,9 @@ import jakarta.validation.Valid;
 public class AuthController {
     @Autowired
     private AuthService authService;
-    @Value("${api.security.token.cookie-secure}")
+    @Value("${COOKIE_SECURE}")
     private boolean isCookieSecure;
-    @Value("${api.security.token.same-site}")
+    @Value("${SAME_SITE}")
     private String cookieSameSite;
 
     @PostMapping("/login")

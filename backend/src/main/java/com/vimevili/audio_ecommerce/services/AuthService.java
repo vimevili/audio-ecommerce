@@ -77,7 +77,7 @@ public class AuthService implements UserDetailsService {
         return userRepository.findByUsernameOrEmail(identifier, identifier);
     }
     
-    @Value("${app.url.frontend}")
+    @Value("${FRONTEND_URL}")
     private String frontendUrl ;
 
     public String authenticateUser(AuthDTO data) {

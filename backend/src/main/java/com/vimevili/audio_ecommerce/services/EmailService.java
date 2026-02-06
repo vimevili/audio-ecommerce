@@ -14,7 +14,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Value("${app.email.from}")
+    @Value("${APP_EMAIL_FROM}")
     private String fromEmail;
 
     public void sendVerificationEmail(UserModel user, String token) {
