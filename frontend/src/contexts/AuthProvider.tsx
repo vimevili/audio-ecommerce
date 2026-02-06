@@ -7,7 +7,7 @@ import { AuthContext } from '../hooks/useAuth';
 export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const initializeCart = useCartStore((state) => state.initializeCart);
-  const clearCart = useCartStore((state) => state.clearCart);
+  const resetLocalCart = useCartStore((state) => state.resetLocalCart);
 
   const {
     data: user,
@@ -21,7 +21,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refetchOnWindowFocus: false,
   });
 
-  // Initialize cart when user is authenticated
   useEffect(() => {
     if (user?.id) {
       initializeCart(user.id);
@@ -30,7 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     await authService.logout();
-    clearCart();
+    resetLocalCart();
     queryClient.setQueryData(['authUser'], null);
     queryClient.clear();
   };

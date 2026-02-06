@@ -41,12 +41,11 @@ import jakarta.validation.Valid;
 @Tag(name = "Authentication", description = "Endpoints for authentication and session management")
 @ApiGlobalErrors
 public class AuthController {
-    
     @Autowired
     private AuthService authService;
-    @Value("${app.security.cookie-secure}")
+    @Value("${api.security.token.cookie-secure}")
     private boolean isCookieSecure;
-    @Value("${app.security.same-site}")
+    @Value("${api.security.token.same-site}")
     private String cookieSameSite;
 
     @PostMapping("/login")
@@ -66,7 +65,7 @@ public class AuthController {
     @Operation(summary = "Sign Up")
     @ApiResponse(responseCode = "201", description = "User successfully created!", 
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
-    @ApiResponse(responseCode = "409", description = "Username or email already exists!", content = @Content) // Específico daqui
+    @ApiResponse(responseCode = "409", description = "Username or email already exists!", content = @Content)
     public ResponseEntity<String> register(@RequestBody @Valid RegisterDTO data) {
         authService.registerUser(data);
         return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful! Check your email.");

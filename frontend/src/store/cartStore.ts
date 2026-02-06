@@ -28,6 +28,7 @@ interface CartState {
   incrementQuantity: (id: string) => void;
   decrementQuantity: (id: string) => void;
   clearCart: () => Promise<void>;
+  resetLocalCart: () => void;
   syncWithBackend: (userId: string) => Promise<void>;
 
   getTotalItems: () => number;
@@ -191,7 +192,7 @@ export const useCartStore = create<CartState>()((set, get) => ({
       }
     }
   },
-
+  resetLocalCart: () => set({ items: [], cartId: null }),
   syncWithBackend: async (userId: string) => {
     try {
       const cart = await cartService.getOrCreateCart(userId);

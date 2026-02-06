@@ -1,5 +1,52 @@
-spring.application.name=audio-ecommerce
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:profile}
+  datasource:
+    url: jdbc:db_url
+    username: user
+    password: password
+  mail:
+    host: mail_host
+    port: mail_port
+    username: mail_user
+    password: mail_password
+app:
+  email:
+    from: email
+api:
+  security:
+    token:
+      cookie-name: auth_token
+      secret: secret-key
 
-spring.datasource.url=jdbc:jdbc:postgresql://seu-host-aqui:5432/postgres
-spring.datasource.username=seu-user
-spring.datasource.password=sua-senha
+---
+# Perfil de DESENVOLVIMENTO (Local)
+spring:
+  config:
+    activate:
+      on-profile: dev
+api:
+  security:
+    token:
+      cookie-secure: false
+      same-site: Lax
+app:
+  url:
+    frontend: http://localhost:5173
+    backend: http://localhost:8080
+
+---
+# Perfil de PRODUÇÃO
+spring:
+  config:
+    activate:
+      on-profile: prod
+api:
+  security:
+    token:
+      cookie-secure: true
+      same-site: None
+app:
+  url:
+    frontend: https://frontend.url
+    backend: https://backend.url
