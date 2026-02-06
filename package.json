@@ -3,10 +3,13 @@
   "private": true,
   "scripts": {
     "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && mvnw spring-boot:run -q",
+    "dev:backend": "cd backend && dotenv -e .env -- mvnw spring-boot:run",
     "start:all": "concurrently -n \"FRONT,BACK\" -c \"cyan,green\" \"npm run dev:frontend\" \"npm run dev:backend\""
   },
   "dependencies": {
     "concurrently": "^9.2.1"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^11.0.0"
   }
 }
